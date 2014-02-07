@@ -1,10 +1,10 @@
 package com.alex.display 
 {
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ItemType;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.MapBlock;
@@ -17,7 +17,7 @@ package com.alex.display
 	 * ...
 	 * @author alex
 	 */
-	public class BasePhysicsItem extends Sprite implements IDisplay, ICommandHandler
+	public class BasePhysicsItem extends Sprite implements IDisplay, IOrderExecutor
 	{
 		
 		protected var _physicsComponent:PhysicsComponent;
@@ -84,7 +84,7 @@ package com.alex.display
 			if (this._isRelease) {
 				throw "error";
 			}
-			Commander.sendCommand(CommandConst.REMOVE_ITEM_FROM_WORLD_MAP, this);
+			Commander.sendOrder(OrderConst.REMOVE_ITEM_FROM_WORLD_MAP, this);
 			Commander.cancelHandler(this);
 			this._id = null;
 			this._position.release();
@@ -97,36 +97,29 @@ package com.alex.display
 		
 		/* INTERFACE com.alex.pattern.ICommandHandler */
 		
-		public function getCommandList():Array 
+		public function getExecuteOrderList():Array 
 		{
 			return [
-						CommandConst.ROLE_START_MOVE,
-						CommandConst.ROLE_STOP_MOVE,
+						OrderConst.SET_FACE_DIRECTION
 					];
 		}
 		
-		public function handleCommand(commandName:String, commandParam:Object = null):void 
+		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case CommandConst.ROLE_START_MOVE:
-					this._physicsComponent.startMove(commandParam as int);
-					if (commandParam == 0) {
-						this._physicsComponent.faceDirection = -1;
-					} else if (commandParam == 1) {
-						this._physicsComponent.faceDirection = 1;
+				case OrderConst.SET_FACE_DIRECTION:
+					if (commandParam == 1 || commandParam == -1) {
+						this._body.scaleX = commandParam as int;
 					}
-					this._body.scaleX = this._physicsComponent.faceDirection;
-					break;
-				case CommandConst.ROLE_STOP_MOVE:
-					this._physicsComponent.stopMove(int(commandParam));
 					break;
 			}
 		}
 		
-		public function getHandlerId():String 
+		public function getExecutorId():String 
 		{
 			return this.id;
 		}
+		
 		
 		public function refreshItemXY():void {
 			if (this.position == null) {

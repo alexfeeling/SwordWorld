@@ -1,15 +1,14 @@
 package com.alex.skill 
 {
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.pattern.ICommandSender;
+	import com.alex.pattern.IOrderExecutor;
 	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author alex
 	 */
-	public class SkillManager implements ICommandHandler, ICommandSender
+	public class SkillManager implements IOrderExecutor
 	{
 		
 		private static const SKILL_KEY_CHI:String = "j";
@@ -56,22 +55,22 @@ package com.alex.skill
 			return this._skillKeyDic[vKeyCombin] != null;
 		}
 		
-		public function getCommandList () : Array {
+		public function getExecuteOrderList () : Array {
 			return [
-						CommandConst.ROLE_USE_SKILL
+						OrderConst.ROLE_USE_SKILL
 					];
 		}
 
-		public function getHandlerId () : String {
+		public function getExecutorId () : String {
 			return "skill_manager";
 		}
 
-		public function handleCommand (commandName:String, commandParam:Object = null) : void {
+		public function executeOrder (commandName:String, commandParam:Object = null) : void {
 			switch(commandName) {
-				case CommandConst.ROLE_USE_SKILL:
+				case OrderConst.ROLE_USE_SKILL:
 					if (commandParam is String) {
 						//trace("use skill:", this._skillKeyDic[commandParam]);
-						this.sendCommand(CommandConst.CREATE_SKILL, this._skillKeyDic[commandParam as String]);
+						this.sendCommand(OrderConst.CREATE_SKILL, this._skillKeyDic[commandParam as String]);
 					}
 					break;
 			}
@@ -81,7 +80,7 @@ package com.alex.skill
 		
 		public function sendCommand(commandName:String, commandParam:Object = null):void 
 		{
-			Commander.sendCommand(commandName, commandParam);
+			Commander.sendOrder(commandName, commandParam);
 		}
 	
 	}

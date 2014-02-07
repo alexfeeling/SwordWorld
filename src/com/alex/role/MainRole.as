@@ -3,14 +3,13 @@ package com.alex.role
 	import com.alex.animation.AnimationManager;
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
 	import com.alex.display.BasePhysicsItem;
 	import com.alex.display.IDisplay;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.pattern.ICommandSender;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.skill.Skill;
@@ -30,7 +29,7 @@ package com.alex.role
 	 * ...
 	 * @author alex
 	 */
-	public class MainRole extends BasePhysicsItem implements ICommandHandler, IAnimation
+	public class MainRole extends BasePhysicsItem implements IOrderExecutor, IAnimation
 	{
 		
 		[Embed(source="/../bin/asset/role/run.swf", symbol="RoleRun")]
@@ -70,7 +69,7 @@ package com.alex.role
 			_shadow.graphics.drawRect( -MapBlock.GRID_WIDTH / 2, - MapBlock.GRID_HEIGHT / 2,
 									MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
 			_shadow.graphics.endFill();
-			_body = new Sprite();
+			//_body = new Sprite();
 			//_body.graphics.beginFill(0xffff00, 0.7);
 			//_body.graphics.drawRect( -MapBlock.GRID_WIDTH / 2, -70, MapBlock.GRID_WIDTH, 70);
 			//_body.graphics.endFill();
@@ -87,39 +86,40 @@ package com.alex.role
 			//var vc:Class = getDefinitionByName("RoleRun") as Class;
 		}
 		
-	    override public function getCommandList():Array 
+	    override public function getExecuteOrderList():Array 
 		{
-			return super.getCommandList().concat([
-													CommandConst.CREATE_SKILL,
-													CommandConst.ROLE_JUMP
+			return super.getExecuteOrderList().concat([
+													OrderConst.CREATE_SKILL,
+													OrderConst.ROLE_START_MOVE,
+													OrderConst.ROLE_STOP_MOVE,
+													OrderConst.ROLE_JUMP
 												]);
 		}
 		
-		override public function handleCommand(commandName:String, commandParam:Object = null):void 
+		override public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case CommandConst.CREATE_SKILL:
+				case OrderConst.CREATE_SKILL:
 					var skillName:String = commandParam as String;
 					if (skillName != null) {
 						var sPosition:Position = this.position.copy();
 						var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?ForceDirection.X_RIGHT:ForceDirection.X_LEFT, 40, 10);
-						Commander.sendCommand(CommandConst.ADD_ITEM_TO_WORLD_MAP, skill);
-						//if (this._faceDir == 1) {
-							//sPosition.insideX += 60;
-						//} else if (this._faceDir == -1) {
-							//sPosition.insideX -= 60;
-						//} else {
-							//break;
-						//}
+						Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 					}
 					break;
-				case CommandConst.ROLE_JUMP:
+				case OrderConst.ROLE_START_MOVE:
+					this._physicsComponent.startMove(commandParam as int);
+					break;
+				case OrderConst.ROLE_STOP_MOVE:
+					this._physicsComponent.stopMove(int(commandParam));
+					break;
+				case OrderConst.ROLE_JUMP:
 					if (this.position.elevation <= 0) {
 						this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
 					}
 					break;
 				default:
-					super.handleCommand(commandName, commandParam);
+					super.executeOrder(commandName, commandParam);
 			}
 			
 		}

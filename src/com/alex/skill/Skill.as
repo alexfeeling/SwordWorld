@@ -3,14 +3,14 @@ package com.alex.skill
 	import com.alex.animation.AnimationManager;
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
 	import com.alex.display.BasePhysicsItem;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.util.IdMachine;
@@ -24,7 +24,7 @@ package com.alex.skill
 	 * ...
 	 * @author alex
 	 */
-	public class Skill extends BasePhysicsItem implements IAnimation, ICommandHandler
+	public class Skill extends BasePhysicsItem implements IAnimation, IOrderExecutor
 	{
 		
 		private var _ownner:IPhysics;
@@ -85,7 +85,7 @@ package com.alex.skill
 			if (this.parent != null) {
 				this.parent.removeChild(this);
 			}
-			this.removeChildren(0);
+			this.removeChildren();
 			this.name = "";
 			this._ownner = null;
 		}

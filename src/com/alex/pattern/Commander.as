@@ -35,26 +35,26 @@ package com.alex.pattern
 		}
 		
 		///注册命令执行者，要执行想监听的命令，则要先注册为执行者
-		public static function registerHandler(handler:ICommandHandler):void {
+		public static function registerHandler(handler:IOrderExecutor):void {
 			getInstance().m_register(handler);
 		}
 		
 		///取消监听命令、执行命令
-		public static function cancelHandler(handler:ICommandHandler):void {
+		public static function cancelHandler(handler:IOrderExecutor):void {
 			getInstance().m_remove(handler);
 		}
 		
 		///发送命令，只有实现ICommandSender接口的类对象才可发送命令
-		public static function sendCommand(commandName:String, commandParam:Object = null):void {
-			getInstance().m_sendCommand(commandName, commandParam);
+		public static function sendOrder(commandName:String, commandParam:Object = null):void {
+			getInstance().m_sendOrder(commandName, commandParam);
 		}
 		
-		private function m_register(handler:ICommandHandler):void {
-			var hId:String = handler.getHandlerId();
+		private function m_register(handler:IOrderExecutor):void {
+			var hId:String = handler.getExecutorId();// getExecutorId();
 			if (hId == null || hId == "") {
 				return;
 			}
-			var commandList:Array = handler.getCommandList();
+			var commandList:Array = handler.getExecuteOrderList();
 			if (commandList == null || commandList.length == 0) {
 				return;
 			}
@@ -73,15 +73,15 @@ package com.alex.pattern
 		}
 		
 		///移除执行者
-		private function m_remove(vHandler:ICommandHandler):void {
+		private function m_remove(vHandler:IOrderExecutor):void {
 			if (vHandler == null) {
 				return;
 			}
-			var hId:String = vHandler.getHandlerId();
+			var hId:String = vHandler.getExecutorId();
 			if (hId == null) {
 				return;
 			}
-			var commandList:Array = vHandler.getCommandList();
+			var commandList:Array = vHandler.getExecuteOrderList();
 			if (commandList != null) {
 				for (var i:int = 0, len:int = commandList.length; i < len; i++) {
 					var command:String = commandList[i] as String;
@@ -95,7 +95,7 @@ package com.alex.pattern
 			}
 		}
 		
-		private function m_sendCommand(commandName:String, commandParam:Object = null):void {
+		private function m_sendOrder(commandName:String, commandParam:Object = null):void {
 			if (commandName == null || commandName == "") {
 				return;
 			}
@@ -103,9 +103,9 @@ package com.alex.pattern
 			if (handlersDic == null) {
 				return;
 			}
-			for each(var fObj:ICommandHandler in handlersDic) {
+			for each(var fObj:IOrderExecutor in handlersDic) {
 				if (fObj != null) {
-					fObj.handleCommand(commandName, commandParam);
+					fObj.executeOrder(commandName, commandParam);
 				} 
 			}
 		}

@@ -9,13 +9,12 @@ package com.alex.worldmap
 	import com.alex.pool.IRecycle;
 	import com.alex.skill.Skill;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.constant.CommandConst;
+	import com.alex.pattern.IOrderExecutor;
+	import com.alex.constant.OrderConst;
 	import com.alex.controll.KeyboardController;
 	import com.alex.display.IDisplay;
 	import com.alex.display.Tree;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.pattern.ICommandSender;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.role.MainRole;
 	import com.alex.util.IdMachine;
@@ -40,7 +39,7 @@ package com.alex.worldmap
 	 * ...
 	 * @author alex
 	 */
-	public class WorldMap extends Sprite implements IAnimation,ICommandHandler, ICommandSender
+	public class WorldMap extends Sprite implements IAnimation,IOrderExecutor
 	{
 		
 		public static var ASSET_LOAD:String = "asset/map/";
@@ -198,7 +197,7 @@ package com.alex.worldmap
 		
 		///删除单个地图块
 		private function removeMapBlock(blockX:int, blockY:int):void {
-			this.sendCommand(CommandConst.REMOVE_MAP_BLOCK, 
+			this.sendCommand(OrderConst.REMOVE_MAP_BLOCK, 
 				{ blockX:blockX, blockY:blockY} );
 			if (this._allMapBlockDic[blockX] == null) {
 				return;
@@ -211,7 +210,7 @@ package com.alex.worldmap
 		
 		///删除整列地图块
 		private function removeMapBlockByX(blockX:int):void {
-			this.sendCommand(CommandConst.REMOVE_ALL_COLUMN_MAP_BLOCK, blockX);
+			this.sendCommand(OrderConst.REMOVE_ALL_COLUMN_MAP_BLOCK, blockX);
 			if (this._allMapBlockDic[blockX] != null) {
 				this._allMapBlockDic[blockX] = null;
 				delete this._allMapBlockDic[blockX];
@@ -220,7 +219,7 @@ package com.alex.worldmap
 		
 		///删除整行地图块
 		private function removeMapBlockByY(blockY:int):void {
-			this.sendCommand(CommandConst.REMOVE_ALL_ROW_MAP_BLOCK, blockY);
+			this.sendCommand(OrderConst.REMOVE_ALL_ROW_MAP_BLOCK, blockY);
 			for each(var mdy:Dictionary in this._allMapBlockDic) {
 				if (mdy != null && mdy[blockY] != null) {
 					mdy[blockY] = null;
@@ -546,20 +545,19 @@ package com.alex.worldmap
 		}
 		
 		/* INTERFACE alex.pattern.ICommandHandler */
-		private var _commandList:Array = [
-											CommandConst.MAP_ITEM_MOVE,
-											CommandConst.ADD_ITEM_TO_WORLD_MAP,
-											CommandConst.REMOVE_ITEM_FROM_WORLD_MAP
-										];
-		public function getCommandList():Array 
+		public function getExecuteOrderList():Array 
 		{
-			return this._commandList;
+			return [
+						OrderConst.MAP_ITEM_MOVE,
+						OrderConst.ADD_ITEM_TO_WORLD_MAP,
+						OrderConst.REMOVE_ITEM_FROM_WORLD_MAP
+					];
 		}
 		
-		public function handleCommand(commandName:String, commandParam:Object = null):void 
+		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case CommandConst.MAP_ITEM_MOVE:
+				case OrderConst.MAP_ITEM_MOVE:
 					var display:IPhysics = commandParam.display as IPhysics;
 					var direction:int = int(commandParam.direction);
 					var distance:Number = Number(commandParam.distance);
@@ -567,7 +565,7 @@ package com.alex.worldmap
 						this.itemMove(display, direction, distance);
 					}
 					break;
-				case CommandConst.ADD_ITEM_TO_WORLD_MAP://添加对象到地图中
+				case OrderConst.ADD_ITEM_TO_WORLD_MAP://添加对象到地图中
 					var item:IPhysics = commandParam as IPhysics;
 					if (item == null) {
 						break;
@@ -576,7 +574,7 @@ package com.alex.worldmap
 					this._mapGridItemSp.addChild((item as IDisplay).toDisplayObject());
 					this._allOtherDisplay[item.id] = item;
 					break;
-				case CommandConst.REMOVE_ITEM_FROM_WORLD_MAP://从地图中移除对象
+				case OrderConst.REMOVE_ITEM_FROM_WORLD_MAP://从地图中移除对象
 					item = commandParam as IPhysics;
 					if (item && this._allOtherDisplay[item.id]) {
 						this._allOtherDisplay[item.id] = null;
@@ -587,7 +585,7 @@ package com.alex.worldmap
 			}
 		}
 		
-		public function getHandlerId():String 
+		public function getExecutorId():String 
 		{
 			return "WorldMap";
 		}
@@ -596,7 +594,7 @@ package com.alex.worldmap
 		
 		public function sendCommand(commandName:String, commandParam:Object = null):void 
 		{
-			Commander.sendCommand(commandName, commandParam);
+			Commander.sendOrder(commandName, commandParam);
 		}
 		
 		/* INTERFACE com.alex.animation.IAnimation */

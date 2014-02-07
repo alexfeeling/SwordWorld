@@ -4,11 +4,11 @@ package com.alex.display
 	import com.alex.animation.AnimationManager;
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.util.IdMachine;
@@ -27,7 +27,7 @@ package com.alex.display
 	 * ...
 	 * @author alex
 	 */
-	public class Tree extends BasePhysicsItem implements ICommandHandler, IAnimation
+	public class Tree extends BasePhysicsItem implements IOrderExecutor, IAnimation
 	{
 		
 		[Embed(source="/../bin/asset/role/head.jpg")]

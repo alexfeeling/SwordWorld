@@ -1,14 +1,14 @@
 package com.alex.component 
 {
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
+	import com.alex.display.BasePhysicsItem;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.display.Tree;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.pattern.ICommandSender;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.role.MainRole;
@@ -23,7 +23,7 @@ package com.alex.component
 	 * 物理组件，代表显示对象在地图世界中的实体表示。长宽高，位置，
 	 * @author alex
 	 */
-	public class PhysicsComponent implements ICommandHandler, ICommandSender, IRecycle
+	public class PhysicsComponent implements IOrderExecutor, IRecycle
 	{
 		
 		public static const GRAVITY:Number = 9.8 * 1.7;
@@ -75,7 +75,7 @@ package com.alex.component
 		public var standOnItem:IPhysics;
 		
 		///面向方向：1是向右，-1是向左
-		public var faceDirection:int = 1;
+		private var _faceDirection:int = 1;
 		
 		public function PhysicsComponent() 
 		{
@@ -352,6 +352,21 @@ package com.alex.component
 			_physicsType = value;
 		}
 		
+		public function get faceDirection():int 
+		{
+			return _faceDirection;
+		}
+		
+		public function set faceDirection(value:int):void 
+		{
+			if (value != _faceDirection) {
+				_faceDirection = value;
+				if (this._displayObj is IOrderExecutor) {
+					(this._displayObj as IOrderExecutor).executeOrder(OrderConst.SET_FACE_DIRECTION, this._faceDirection);
+				}
+			}
+		}
+		
 		///运行移动，需要每帧运行
 		public function run(passedTime:Number, isFocus:Boolean = false):void {
 			if (!(this._displayObj is MainRole)) {
@@ -398,7 +413,7 @@ package com.alex.component
 					this._xVelocity = Math.max(this._xVelocity - a * tempTime, 0);
 				}
 				if (distance > 0) {
-					this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+					Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 							direction:ForceDirection.X_RIGHT, distance:int(distance), isFocus:isFocus } );
 				}
 			} else if (this._xVelocity < 0) {
@@ -407,7 +422,7 @@ package com.alex.component
 					this._xVelocity = Math.min(this._xVelocity + a * tempTime, 0);
 				}
 				if (distance > 0) {
-					this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+					Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 							direction:ForceDirection.X_LEFT, distance:int(distance), isFocus:isFocus } );
 				}
 			} else {
@@ -430,7 +445,7 @@ package com.alex.component
 					this._yVelocity = Math.max(this._yVelocity - a * tempTime, 0);
 				}
 				if (distance > 0) {
-					this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+					Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 							direction:ForceDirection.Y_DOWN, distance:int(distance), isFocus:isFocus } );
 				}
 			} else if (this._yVelocity < 0) {
@@ -439,7 +454,7 @@ package com.alex.component
 					this._yVelocity = Math.min(this._yVelocity + a * tempTime, 0);
 				}
 				if (distance > 0) {
-					this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+					Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 							direction:ForceDirection.Y_UP, distance:int(distance), isFocus:isFocus } );
 				}
 			}else {
@@ -459,14 +474,14 @@ package com.alex.component
 			if (this._zVelocity > 0) {
 				var distance:Number = this._zVelocity * tempTime - 0.5 * a * tempTime * tempTime;
 				this._zVelocity -= GRAVITY * passedTime/100;
-				this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+				Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 							direction:ForceDirection.Z_TOP, distance:int(distance), isFocus:isFocus } );
 			} 
 			else if (this._position.elevation > 0) {
 				if (_physicsType == ItemType.SOLID) {
 					distance = 0.5 * a * tempTime * tempTime - this._zVelocity * tempTime;
 					this._zVelocity -= GRAVITY * passedTime/100;
-					this.sendCommand(CommandConst.MAP_ITEM_MOVE, { display:this._displayObj, 
+					Commander.sendOrder(OrderConst.MAP_ITEM_MOVE, { display:this._displayObj, 
 								direction:ForceDirection.Z_BOTTOM, distance:int(distance), isFocus:isFocus } );
 				}
 			} else {//碰到地面
@@ -507,24 +522,17 @@ package com.alex.component
 			}
 		}
 		
-		/* INTERFACE alex.pattern.ICommandSender */
-		
-		public function sendCommand(commandName:String, commandParam:Object = null):void 
-		{
-			Commander.sendCommand(commandName, commandParam);
-		}
-		
 		/* INTERFACE com.alex.pattern.ICommandHandler */
 		
-		public function getCommandList():Array 
+		public function getExecuteOrderList():Array 
 		{
-			return [CommandConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id];
+			return [OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id];
 		}
 		
-		public function handleCommand(commandName:String, commandParam:Object = null):void 
+		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case CommandConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id:
+				case OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id:
 					var dir:int = commandParam.dir as int;
 					var energy:Number = commandParam.energy as Number;
 					var loseControll:Boolean = commandParam.loseControll as Boolean;
@@ -533,7 +541,7 @@ package com.alex.component
 			}
 		}
 		
-		public function getHandlerId():String 
+		public function getExecutorId():String 
 		{
 			return this._id;
 		}

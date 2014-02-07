@@ -1,11 +1,10 @@
 package com.alex.controll 
 {
 	import com.alex.animation.IAnimation;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
-	import com.alex.pattern.ICommandSender;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.skill.Skill;
 	import com.alex.skill.SkillManager;
 	import flash.display.Stage;
@@ -15,7 +14,7 @@ package com.alex.controll
 	 * ...
 	 * @author alex
 	 */
-	public class KeyboardController implements ICommandHandler,  ICommandSender, IAnimation 
+	public class KeyboardController implements IOrderExecutor, IAnimation 
 	{
 		
 		private var _stage:Stage;
@@ -106,19 +105,19 @@ package com.alex.controll
 				}
 				switch(event.keyCode) {
 					case KEY_A:
-						this.sendCommand(CommandConst.ROLE_START_MOVE, ForceDirection.X_LEFT);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.X_LEFT);
 						break;
 					case KEY_D:
-						this.sendCommand(CommandConst.ROLE_START_MOVE, ForceDirection.X_RIGHT);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.X_RIGHT);
 						break;
 					case KEY_W:
-						this.sendCommand(CommandConst.ROLE_START_MOVE, ForceDirection.Y_UP);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.Y_UP);
 						break;
 					case KEY_S:
-						this.sendCommand(CommandConst.ROLE_START_MOVE, ForceDirection.Y_DOWN);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.Y_DOWN);
 						break;
 					case KEY_I://跳跃，闪避
-						this.sendCommand(CommandConst.ROLE_JUMP);
+						Commander.sendOrder(OrderConst.ROLE_JUMP);
 						this._skillKey = event.keyCode;
 						this._keyStayTime = -1;
 						break;
@@ -150,16 +149,16 @@ package com.alex.controll
 		private function onKeyRelease(event:KeyboardEvent):void {
 			switch(event.keyCode) {
 				case KEY_A:
-					this.sendCommand(CommandConst.ROLE_STOP_MOVE, ForceDirection.X_LEFT);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.X_LEFT);
 					break;
 				case KEY_D:
-					this.sendCommand(CommandConst.ROLE_STOP_MOVE, ForceDirection.X_RIGHT);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.X_RIGHT);
 					break;
 				case KEY_W:
-					this.sendCommand(CommandConst.ROLE_STOP_MOVE, ForceDirection.Y_UP);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.Y_UP);
 					break;
 				case KEY_S:
-					this.sendCommand(CommandConst.ROLE_STOP_MOVE, ForceDirection.Y_DOWN);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.Y_DOWN);
 					break;
 			}
 			_keyDic[event.keyCode] = 0;
@@ -167,28 +166,24 @@ package com.alex.controll
 			this._propKey = 0;
 		}
 		
-		public function getCommandList () : Array {
+		public function getExecuteOrderList () : Array {
 			return [
 						
 					];
 		}
 		
-		public function getHandlerId () : String {
+		public function getExecutorId () : String {
 			return "keyboard_controller";
 		}
 
-		public function handleCommand (commandName:String, commandParam:Object = null) : void {
-			//switch(commandName) {
-				//case "":
-					
-					//break;
-			//}
+		public function executeOrder (commandName:String, commandParam:Object = null) : void {
+			
 		}
 		
 		public function gotoNextFrame (passedTime:Number) : void {
 			if (this._propKey != 0) {
 				//使用物品
-				this.sendCommand(CommandConst.ROLE_USE_PROP, this._propKey);
+				Commander.sendOrder(OrderConst.ROLE_USE_PROP, this._propKey);
 				_keyDic[this._propKey] = null;
 				delete _keyDic[this._propKey];
 				this._propKey = 0;
@@ -201,7 +196,7 @@ package com.alex.controll
 						this._keyStayTime = 0;
 					} else if (this._keyCombinBox != null && this._keyCombinBox.length > 0) {
 						//如果新加键组合无招式，则用之前键组合触发技能
-						this.sendCommand(CommandConst.ROLE_USE_SKILL, this._keyCombinBox);
+						Commander.sendOrder(OrderConst.ROLE_USE_SKILL, this._keyCombinBox);
 						this._skillKey = 0;
 						this._keyStayTime = -1;
 						this._keyCombinBox = "";
@@ -209,7 +204,7 @@ package com.alex.controll
 				} else if (this._keyStayTime >= 0) {
 					this._keyStayTime += passedTime;
 					if (this._keyStayTime >= this._keyStayOverTime) {
-						this.sendCommand(CommandConst.ROLE_USE_SKILL, this._keyCombinBox);
+						Commander.sendOrder(OrderConst.ROLE_USE_SKILL, this._keyCombinBox);
 						this._skillKey = 0;
 						this._keyStayTime = -1;
 						this._keyCombinBox = "";
@@ -224,13 +219,6 @@ package com.alex.controll
 
 		public function isPlayEnd () : Boolean {
 			return false;
-		}
-		
-		/* INTERFACE alex.pattern.ICommandSender */
-		
-		public function sendCommand(commandName:String, commandParam:Object = null):void 
-		{
-			Commander.sendCommand(commandName, commandParam);
 		}
 		
 		/* INTERFACE com.alex.animation.IAnimation */

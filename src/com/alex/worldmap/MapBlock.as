@@ -1,12 +1,12 @@
 package com.alex.worldmap 
 {
 	import adobe.utils.CustomActions;
-	import com.alex.constant.CommandConst;
+	import com.alex.constant.OrderConst;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.display.Tree;
 	import com.alex.pattern.Commander;
-	import com.alex.pattern.ICommandHandler;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.role.MainRole;
@@ -22,7 +22,7 @@ package com.alex.worldmap
 	 * ...
 	 * @author alex
 	 */
-	public class MapBlock implements IRecycle, ICommandHandler 
+	public class MapBlock implements IRecycle, IOrderExecutor 
 	{
 		
 		///地图格大小
@@ -94,34 +94,34 @@ package com.alex.worldmap
 		//}
 		
 		/* INTERFACE com.alex.pattern.ICommandHandler */
-		public function getCommandList():Array 
+		public function getExecuteOrderList():Array 
 		{
 			return [
-						CommandConst.REMOVE_MAP_BLOCK,
-						CommandConst.REMOVE_ALL_ROW_MAP_BLOCK,
-						CommandConst.REMOVE_ALL_COLUMN_MAP_BLOCK
+						OrderConst.REMOVE_MAP_BLOCK,
+						OrderConst.REMOVE_ALL_ROW_MAP_BLOCK,
+						OrderConst.REMOVE_ALL_COLUMN_MAP_BLOCK
 					];
 		}
 		
-		public function handleCommand(commandName:String, commandParam:Object = null):void 
+		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			if (this._isRelease) {
 				return;
 			}
 			switch(commandName) {
-				case CommandConst.REMOVE_MAP_BLOCK:
+				case OrderConst.REMOVE_MAP_BLOCK:
 					if (commandParam.blockX == this.blockX &&
 						commandParam.blockY == this.blockY) 
 					{
 						this.release();
 					}
 					break;
-				case CommandConst.REMOVE_ALL_ROW_MAP_BLOCK:
+				case OrderConst.REMOVE_ALL_ROW_MAP_BLOCK:
 					if (commandParam == this.blockY) {
 						this.release();
 					}
 					break;
-				case CommandConst.REMOVE_ALL_COLUMN_MAP_BLOCK:
+				case OrderConst.REMOVE_ALL_COLUMN_MAP_BLOCK:
 					if (commandParam == this.blockX) {
 						this.release();
 					}
@@ -129,7 +129,7 @@ package com.alex.worldmap
 			}
 		}
 		
-		public function getHandlerId():String 
+		public function getExecutorId():String 
 		{
 			return this._id;
 		}
