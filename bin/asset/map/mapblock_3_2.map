@@ -1,0 +1,20 @@
+[
+{"blockX":3, "blockY":2},
+{"gridX":0,"gridY":0,"type":"wall"},
+{"gridX":0,"gridY":1,"type":"wall"},
+{"gridX":0,"gridY":2,"type":"wall"},
+{"gridX":0,"gridY":3,"type":"wall"},
+{"gridX":0,"gridY":4,"type":"wall"},
+{"gridX":0,"gridY":5,"type":"wall"},
+{"gridX":0,"gridY":6,"type":"wall"},
+{"gridX":1,"gridY":0,"type":"wall"},
+{"gridX":2,"gridY":0,"type":"wall"},
+{"gridX":3,"gridY":0,"type":"wall"},
+{"gridX":4,"gridY":0,"type":"wall"},
+{"gridX":5,"gridY":0,"type":"wall"},
+{"gridX":6,"gridY":0,"type":"wall"},
+{"gridX":1, "gridY":1, "type":"tree"},
+{"gridX":1, "gridY":2, "type":"tree"},
+{"gridX":2, "gridY":4, "type":"tree"},
+{"gridX":3, "gridY":4, "type":"tree"}
+]
