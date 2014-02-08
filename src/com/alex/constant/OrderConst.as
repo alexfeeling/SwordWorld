@@ -34,7 +34,7 @@ package com.alex.constant
 		
 		public static const REMOVE_ITEM_FROM_WORLD_MAP:String = "cmd_remove_item_from_world_map";
 		
-		public static const SET_FACE_DIRECTION:String = "set_face_direction";
+		public static const CHANGE_FACE_DIRECTION:String = "set_face_direction";
 	}
 
 }

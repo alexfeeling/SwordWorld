@@ -11,6 +11,7 @@ package com.alex.display
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
+	import com.alex.unit.BaseUnit;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
@@ -27,7 +28,7 @@ package com.alex.display
 	 * ...
 	 * @author alex
 	 */
-	public class Tree extends BasePhysicsItem implements IOrderExecutor, IAnimation
+	public class Tree extends BaseUnit
 	{
 		
 		[Embed(source="/../bin/asset/role/head.jpg")]
@@ -39,18 +40,14 @@ package com.alex.display
 		}
 		
 		public function init(vPostion:Position):Tree {
-			this._id = IdMachine.getId(Tree);
-			this.initBase(vPostion, InstancePool.getPhysicsComponent(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, ItemType.SOLID));
-			this.createUI();
-			Commander.registerHandler(this);
-
+			this.refresh(IdMachine.getId(Tree), vPostion, InstancePool.getPhysicsComponent(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, ItemType.SOLID));
 			this.position.elevation = 200;
 			return this;
 		}
 		
-		private function createUI():void {
-			
-			_shadow.graphics.clear();
+		override protected function createUI():void 
+		{
+			super.createUI();
 			_shadow.graphics.beginFill(0x0, 0.3);
 			_shadow.graphics.drawEllipse(-MapBlock.GRID_WIDTH / 2, -MapBlock.GRID_HEIGHT / 2, 
 								MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
@@ -71,37 +68,9 @@ package com.alex.display
 			_body.addChild(run);
 		}
 		
-		override public function release():void 
-		{
-			super.release();
-			if (this.parent != null) {
-				this.parent.removeChild(this);
-			}
-			this.removeChildren(0);
-			this._shadow = null;
-			this._body = null;
-		}
-		
 		override public function refreshElevation():void 
 		{
 			this._body.y = -this._position.elevation;
-		}
-		
-		/* INTERFACE com.alex.animation.IAnimation */
-		
-		public function isPause():Boolean 
-		{
-			return false;
-		}
-		
-		public function isPlayEnd():Boolean 
-		{
-			return false
-		}
-		
-		public function gotoNextFrame(passedTime:Number):void 
-		{
-			this._physicsComponent.run(passedTime);
 		}
 		
 	}

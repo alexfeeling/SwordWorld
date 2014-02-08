@@ -13,6 +13,8 @@ package com.alex.skill
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
+	import com.alex.unit.AttackableUnit;
+	import com.alex.unit.BaseUnit;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
@@ -24,33 +26,33 @@ package com.alex.skill
 	 * ...
 	 * @author alex
 	 */
-	public class Skill extends BasePhysicsItem implements IAnimation, IOrderExecutor
+	public class Skill extends BaseUnit
 	{
 		
-		private var _ownner:IPhysics;
+		private var _ownner:AttackableUnit;
 		
 		private var _lifeTime:Number = 0;
+		
+		private var _skillData:SkillData;
 		
 		public function Skill() 
 		{
 			
 		}
 		
-		public function init(vName:String, vOwnner:IPhysics, vPosition:Position, 
+		public function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, 
 				vDir:int, vSpeed:Number, vWeight:Number = 0):Skill 
 		{
-			super.initBase(vPosition, InstancePool.getPhysicsComponent(this, vPosition, vSpeed, 50, 50, 50, 10, ItemType.BUBBLE));
-			this._id = IdMachine.getId(Skill);
-			this.name = vName;
+			refresh(IdMachine.getId(Skill), vPosition, InstancePool.getPhysicsComponent(this, vPosition, vSpeed, 50, 50, 50, 10, ItemType.BUBBLE));
+			//this.name = vName;
 			this._ownner = vOwnner;
 			this._physicsComponent.startMove(vDir);
-			this.createUI();
 			this._lifeTime = 5000;
-			Commander.registerHandler(this);
 			return this;
 		}
 		
-		private function createUI():void {
+		override protected function createUI():void {
+			super.createUI();
 			var body:Shape = new Shape();
 			body.y = - this.position.elevation;// this._elevation; 
 			body.graphics.beginFill(0xff00ff, 0.2);
@@ -82,34 +84,15 @@ package com.alex.skill
 		override public function release():void 
 		{
 			super.release();
-			if (this.parent != null) {
-				this.parent.removeChild(this);
-			}
-			this.removeChildren();
-			this.name = "";
 			this._ownner = null;
 		}
 		
-		/* INTERFACE com.alex.animation.IAnimation */
-		
-		public function isPause():Boolean 
-		{
-			return this._isRelease;
-		}
-		
-		public function isPlayEnd():Boolean 
-		{
-			return this._isRelease;
-		}
-		
-		public function gotoNextFrame(passedTime:Number):void 
+		override public function gotoNextFrame(passedTime:Number):void 
 		{
 			if (this._isRelease) {
 				return;
 			}
-			if (this._physicsComponent != null) {
-				this._physicsComponent.run(passedTime);
-			}
+			super.gotoNextFrame(passedTime);
 			if (this._isRelease) {
 				return;
 			}
@@ -119,7 +102,7 @@ package com.alex.skill
 			}
 		}
 		
-		public function get ownner():IPhysics 
+		public function get ownner():AttackableUnit 
 		{
 			return _ownner;
 		}

@@ -13,6 +13,8 @@ package com.alex.role
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.skill.Skill;
+	import com.alex.unit.AttackableUnit;
+	import com.alex.unit.BaseUnit;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
@@ -29,16 +31,13 @@ package com.alex.role
 	 * ...
 	 * @author alex
 	 */
-	public class MainRole extends BasePhysicsItem implements IOrderExecutor, IAnimation
+	public class MainRole extends AttackableUnit
 	{
 		
 		[Embed(source="/../bin/asset/role/run.swf", symbol="RoleRun")]
 		public var RUN_CLASS:Class;
 		
 		private var _speed:Number = 25;
-		
-		///面向方向：1是向右，-1是向左
-		//private var _faceDir:int = 1;
 		
 		private static var _instance:MainRole;
 		
@@ -55,35 +54,20 @@ package com.alex.role
 		}
 		
 		public function init(vPosition:Position):MainRole {
-			this._id = IdMachine.getId(MainRole);
-			var phyc:PhysicsComponent = InstancePool.getPhysicsComponent(this, vPosition, this._speed, 80, 60, 100, 50, ItemType.SOLID);
-			this.initBase(vPosition, phyc);
-			this.createUI();
+			refresh(IdMachine.getId(MainRole), vPosition, InstancePool.getPhysicsComponent(this, vPosition, this._speed, 80, 60, 100, 50, ItemType.SOLID));
 			return this;
 		}
 		
 		private var run:MovieClip;
-		private function createUI():void {
-			_shadow.graphics.clear();
+		override protected function createUI():void {
+			super.createUI();
 			_shadow.graphics.beginFill(0x0, 0.5);
 			_shadow.graphics.drawRect( -MapBlock.GRID_WIDTH / 2, - MapBlock.GRID_HEIGHT / 2,
 									MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
 			_shadow.graphics.endFill();
-			//_body = new Sprite();
-			//_body.graphics.beginFill(0xffff00, 0.7);
-			//_body.graphics.drawRect( -MapBlock.GRID_WIDTH / 2, -70, MapBlock.GRID_WIDTH, 70);
-			//_body.graphics.endFill();
 			run = new RUN_CLASS();
-			//trace(run.width, run.height);
-			//run.scaleX = 0.5;
-			//run.scaleY = 0.5;
-			//run.width = 100;
-			//run.height = 100;
-			//run.x = -run.width>>1;
-			//run.y = -run.height;
 			run.stop();
 			_body.addChild(run);
-			//var vc:Class = getDefinitionByName("RoleRun") as Class;
 		}
 		
 	    override public function getExecuteOrderList():Array 
@@ -96,11 +80,11 @@ package com.alex.role
 												]);
 		}
 		
-		override public function executeOrder(commandName:String, commandParam:Object = null):void 
+		override public function executeOrder(orderName:String, orderParam:Object = null):void 
 		{
-			switch(commandName) {
+			switch(orderName) {
 				case OrderConst.CREATE_SKILL:
-					var skillName:String = commandParam as String;
+					var skillName:String = orderParam as String;
 					if (skillName != null) {
 						var sPosition:Position = this.position.copy();
 						var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?ForceDirection.X_RIGHT:ForceDirection.X_LEFT, 40, 10);
@@ -108,10 +92,10 @@ package com.alex.role
 					}
 					break;
 				case OrderConst.ROLE_START_MOVE:
-					this._physicsComponent.startMove(commandParam as int);
+					this._physicsComponent.startMove(int(orderParam));
 					break;
 				case OrderConst.ROLE_STOP_MOVE:
-					this._physicsComponent.stopMove(int(commandParam));
+					this._physicsComponent.stopMove(int(orderParam));
 					break;
 				case OrderConst.ROLE_JUMP:
 					if (this.position.elevation <= 0) {
@@ -119,26 +103,16 @@ package com.alex.role
 					}
 					break;
 				default:
-					super.executeOrder(commandName, commandParam);
+					super.executeOrder(orderName, orderParam);
 			}
 			
 		}
 		
-		public function isPause():Boolean 
-		{
-			return false;
-		}
-		
-		public function isPlayEnd():Boolean 
-		{
-			return false;
-		}
-		
 		private var tempTime:Number = 0;
 		private var fpsTime:Number = 1000 / 8;
-		public function gotoNextFrame(passedTime:Number):void 
+		override public function gotoNextFrame(passedTime:Number):void 
 		{
-			this._physicsComponent.run(passedTime, true);
+			super.gotoNextFrame(passedTime);
 			tempTime += passedTime;
 			if (tempTime >= fpsTime) {
 				tempTime-= fpsTime;
@@ -148,28 +122,18 @@ package com.alex.role
 			}
 		}
 		
-		/* INTERFACE com.alex.display.IDisplay */
-		
 		override public function refreshElevation():void 
 		{
 			var elevation:Number = Math.max(this._position.elevation, 0);
 			this._body.y = -elevation;
 		}
 		
-		/* INTERFACE com.alex.pool.IRecycle */
 		override public function release():void 
 		{
 			super.release();
-			if (this.parent != null) {
-				this.parent.removeChild(this);
-			}
-			this.removeChildren(0);
-			this._body = null;
-			this._shadow = null;
-			this._id = null;
 			this._speed = 0;
+			this.run = null;
 		}
-		
 		
 	}
 

@@ -83,9 +83,8 @@ package com.alex.component
 		}
 		
 		public function init(vDisplay:IDisplay, vPosition:Position, vSpeed:Number, vLength:Number, vWidth:Number, vHeight:Number, vMass:Number, vPhysicsType:int):PhysicsComponent {
-			
-			this._id = IdMachine.getId(PhysicsComponent);
 			this._isRelease = false;
+			this._id = IdMachine.getId(PhysicsComponent);
 			
 			this._displayObj = vDisplay;
 			this._position = vPosition;
@@ -107,7 +106,7 @@ package com.alex.component
 			
 			this.isStandOnSomething = true;
 			
-			Commander.registerHandler(this);
+			Commander.registerExecutor(this);
 			
 			return this;
 		}
@@ -122,6 +121,7 @@ package com.alex.component
 				case ForceDirection.X_LEFT:
 					this._isMoveLeft = true;
 					this._isMoveRight = false;
+					this.faceDirection = -1;
 					if (this._position.elevation > 0 && 
 						_physicsType == ItemType.SOLID) 
 					{
@@ -136,11 +136,11 @@ package com.alex.component
 					} else {
 						this._xVelocity = -this._xRunSpeed;
 					}
-					this.faceDirection = -1;
 					break;
 				case ForceDirection.X_RIGHT:
 					this._isMoveRight = true;
 					this._isMoveLeft = false;
+					this.faceDirection = 1;
 					if (this._position.elevation > 0 && 
 						_physicsType == ItemType.SOLID) 
 					{
@@ -155,7 +155,6 @@ package com.alex.component
 					} else {
 						this._xVelocity = this._xRunSpeed;
 					}
-					this.faceDirection = 1;
 					break;
 				case 2:
 					this._isMoveUp = true;
@@ -352,6 +351,7 @@ package com.alex.component
 			_physicsType = value;
 		}
 		
+		///面向方向：1是向右，-1是向左
 		public function get faceDirection():int 
 		{
 			return _faceDirection;
@@ -362,7 +362,7 @@ package com.alex.component
 			if (value != _faceDirection) {
 				_faceDirection = value;
 				if (this._displayObj is IOrderExecutor) {
-					(this._displayObj as IOrderExecutor).executeOrder(OrderConst.SET_FACE_DIRECTION, this._faceDirection);
+					(this._displayObj as IOrderExecutor).executeOrder(OrderConst.CHANGE_FACE_DIRECTION, this._faceDirection);
 				}
 			}
 		}
@@ -550,7 +550,7 @@ package com.alex.component
 		
 		public function release():void 
 		{
-			Commander.cancelHandler(this);
+			Commander.cancelExecutor(this);
 			InstancePool.recycle(this);
 			this._isRelease = true;
 			this._displayObj = null;

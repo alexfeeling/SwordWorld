@@ -50,7 +50,7 @@ package com.alex.worldmap
 			
 			this._id = IdMachine.getId(MapBlock);
 			
-			Commander.registerHandler(this);
+			Commander.registerExecutor(this);
 			
 			_isRelease = false;
 			return this;
@@ -140,7 +140,7 @@ package com.alex.worldmap
 			if (_isRelease) {
 				throw("this MapBlock instance had released.");
 			}
-			Commander.cancelHandler(this);
+			Commander.cancelExecutor(this);
 			InstancePool.recycle(this);
 			_isRelease = true;
 			for each(var mapGridDicX:Dictionary in this._allMapGridDic) {
@@ -177,9 +177,6 @@ package com.alex.worldmap
 			if (this._allMapGridDic[gridX][gridY] is Array) {
 				var itemList:Array = this._allMapGridDic[gridX][gridY] as Array;
 				if (itemList != null) {
-					if (isRelease) {
-						trace(item);
-					}
 					var idx:int = itemList.indexOf(item);
 					if (idx >= 0 && itemList[idx] == item) {
 						if (isRelease && item is IRecycle) {

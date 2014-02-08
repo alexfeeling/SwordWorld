@@ -39,7 +39,7 @@ package com.alex.display
 			this._position.phycItem = this;
 			this._physicsComponent = vPhysicsComponent;
 			this._isRelease = false;
-			Commander.registerHandler(this);
+			Commander.registerExecutor(this);
 			_shadow = new Shape();
 			_body = new Sprite();
 			this.addChild(_shadow);
@@ -85,7 +85,7 @@ package com.alex.display
 				throw "error";
 			}
 			Commander.sendOrder(OrderConst.REMOVE_ITEM_FROM_WORLD_MAP, this);
-			Commander.cancelHandler(this);
+			Commander.cancelExecutor(this);
 			this._id = null;
 			this._position.release();
 			this._position = null;
@@ -100,14 +100,14 @@ package com.alex.display
 		public function getExecuteOrderList():Array 
 		{
 			return [
-						OrderConst.SET_FACE_DIRECTION
+						OrderConst.CHANGE_FACE_DIRECTION
 					];
 		}
 		
 		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case OrderConst.SET_FACE_DIRECTION:
+				case OrderConst.CHANGE_FACE_DIRECTION:
 					if (commandParam == 1 || commandParam == -1) {
 						this._body.scaleX = commandParam as int;
 					}

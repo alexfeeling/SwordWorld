@@ -1,36 +1,29 @@
-package 
+package  
 {
-	import com.alex.component.PhysicsComponent;
-	import com.alex.util.Stats;
 	import com.alex.animation.AnimationManager;
+	import com.alex.component.PhysicsComponent;
+	import com.alex.controll.KeyboardController;
 	import com.alex.display.Tree;
 	import com.alex.pattern.Commander;
 	import com.alex.pool.InstancePool;
+	import com.alex.skill.SkillManager;
+	import com.alex.util.Stats;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
-	import com.alex.worldmap.WallGrid;
-	import com.alex.controll.KeyboardController;
-	import com.alex.skill.SkillManager;
 	import com.alex.worldmap.WorldMap;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.system.ApplicationDomain;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	import flash.utils.getTimer;
 	
 	/**
 	 * ...
 	 * @author alex
 	 */
-	public class Main extends Sprite 
+	public class SwordWorld extends Sprite 
 	{
 		
-		public function Main():void 
+		public function SwordWorld() 
 		{
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -42,7 +35,6 @@ package
 			// entry point
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			//stage.addEventListener(Event.RESIZE, this.onStageChange);
 			stage.addEventListener(Event.RESIZE, WorldMap.getInstance().onStageChange);
 			
 			InstancePool.startUp();
@@ -51,12 +43,11 @@ package
 			InstancePool.preset(Tree, 20);
 			InstancePool.preset(PhysicsComponent, 20);
 			
-			Commander.registerHandler(SkillManager.getInstance());
+			Commander.registerExecutor(SkillManager.getInstance());
 			//启动动画管理器
 			AnimationManager.startUp(60);
 			//添加动画
 			AnimationManager.addToAnimationList(new KeyboardController(stage));
-			//stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			var worldMap:WorldMap = WorldMap.getInstance();
 			this.addChild(worldMap);
@@ -66,14 +57,6 @@ package
 			
 		}
 		
-		//private function onEnterFrame(event:Event):void {
-			//trace(event);
-		//}
-		
-		//private function onStageChange(event:Event):void {
-			//trace("stage size change",stage.x, stage.y);
-		//}
-		
 	}
-	
+
 }

@@ -109,7 +109,7 @@ package com.alex.worldmap
 			this.loadMapBlock(1, 0);
 			this.loadMapBlock(1, 1);
 			
-			Commander.registerHandler(this);
+			Commander.registerExecutor(this);
 			AnimationManager.addToAnimationList(this);
 		}
 		
@@ -164,7 +164,7 @@ package com.alex.worldmap
 						}
 						this._mainRole = new MainRole().init(position);// InstancePool.getMainRole(position);
 						this.addGridItem(this._mainRole);
-						this._mapGridItemSp.addChild(this._mainRole);
+						this._mapGridItemSp.addChild(this._mainRole.toDisplayObject());
 						var mapX:Number = (STAGE_WIDTH >> 1) - this._mainRole.toDisplayObject().x;
 						var mapY:Number = (STAGE_HEIGHT >> 1) - this._mainRole.toDisplayObject().y;
 						this.x = mapX;
@@ -377,7 +377,7 @@ package com.alex.worldmap
 							if (tempItem.physicsComponent.physicsType == ItemType.SOLID) {
 								isHitItem = true;
 								//刚体碰撞到刚体，停止移动，贴合
-								item.position.fit(direction, tempItem);
+								item.position.nestleUpTo(direction, tempItem);
 							} 
 						}  
 					}

@@ -43,7 +43,7 @@ package com.alex.worldmap
 		}
 		
 		//与目标单位贴合
-		public function fit(vDirection:int, vTarget:IPhysics):void {
+		public function nestleUpTo(vDirection:int, vTarget:IPhysics):void {
 			var myPhysicsComponent:PhysicsComponent = this.phycItem.physicsComponent;
 			var targetPhysicsComponent:PhysicsComponent = vTarget.physicsComponent;
 			var targetPosition:Position = vTarget.position;

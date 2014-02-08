@@ -13,7 +13,7 @@ package com.alex.pattern
 		private static var _instance:Commander;
 		
 		///所有命令
-		private var _allCommand:Dictionary;
+		private var _allOrder:Dictionary;
 		
 		public function Commander() 
 		{
@@ -24,7 +24,7 @@ package com.alex.pattern
 		}
 		
 		private function init():void {
-			_allCommand = new Dictionary();
+			_allOrder = new Dictionary();
 		}
 		
 		private static function getInstance():Commander {
@@ -35,13 +35,13 @@ package com.alex.pattern
 		}
 		
 		///注册命令执行者，要执行想监听的命令，则要先注册为执行者
-		public static function registerHandler(handler:IOrderExecutor):void {
-			getInstance().m_register(handler);
+		public static function registerExecutor(executor:IOrderExecutor):void {
+			getInstance().m_register(executor);
 		}
 		
 		///取消监听命令、执行命令
-		public static function cancelHandler(handler:IOrderExecutor):void {
-			getInstance().m_remove(handler);
+		public static function cancelExecutor(executor:IOrderExecutor):void {
+			getInstance().m_remove(executor);
 		}
 		
 		///发送命令，只有实现ICommandSender接口的类对象才可发送命令
@@ -49,26 +49,26 @@ package com.alex.pattern
 			getInstance().m_sendOrder(commandName, commandParam);
 		}
 		
-		private function m_register(handler:IOrderExecutor):void {
-			var hId:String = handler.getExecutorId();// getExecutorId();
+		private function m_register(executor:IOrderExecutor):void {
+			var hId:String = executor.getExecutorId();
 			if (hId == null || hId == "") {
 				return;
 			}
-			var commandList:Array = handler.getExecuteOrderList();
-			if (commandList == null || commandList.length == 0) {
+			var orderList:Array = executor.getExecuteOrderList();
+			if (orderList == null || orderList.length == 0) {
 				return;
 			}
-			for (var i:int = 0, len:int = commandList.length; i < len; i++) {
-				var command:String = commandList[i] as String;
-				if (command == null || command == "") {
+			for (var i:int = 0, len:int = orderList.length; i < len; i++) {
+				var order:String = orderList[i] as String;
+				if (order == null || order == "") {
 					continue;
 				}
-				var commandHandlerDic:Dictionary = _allCommand[command] as Dictionary;
-				if (commandHandlerDic == null) {
-					commandHandlerDic = new Dictionary();
-					_allCommand[command] = commandHandlerDic;
+				var executorDic:Dictionary = _allOrder[order] as Dictionary;
+				if (executorDic == null) {
+					executorDic = new Dictionary();
+					_allOrder[order] = executorDic;
 				}
-				commandHandlerDic[hId] = handler;
+				executorDic[hId] = executor;
 			}
 		}
 		
@@ -81,31 +81,31 @@ package com.alex.pattern
 			if (hId == null) {
 				return;
 			}
-			var commandList:Array = vHandler.getExecuteOrderList();
-			if (commandList != null) {
-				for (var i:int = 0, len:int = commandList.length; i < len; i++) {
-					var command:String = commandList[i] as String;
-					if (command != null && command != "") {
-						var commandHandlersDic:Dictionary = _allCommand[command] as Dictionary;
-						if (commandHandlersDic != null) {
-							delete commandHandlersDic[hId];
+			var orderList:Array = vHandler.getExecuteOrderList();
+			if (orderList != null) {
+				for (var i:int = 0, len:int = orderList.length; i < len; i++) {
+					var order:String = orderList[i] as String;
+					if (order != null && order != "") {
+						var executorDic:Dictionary = _allOrder[order] as Dictionary;
+						if (executorDic != null) {
+							delete executorDic[hId];
 						}
 					}
 				}
 			}
 		}
 		
-		private function m_sendOrder(commandName:String, commandParam:Object = null):void {
-			if (commandName == null || commandName == "") {
+		private function m_sendOrder(orderName:String, orderParam:Object = null):void {
+			if (orderName == null || orderName == "") {
 				return;
 			}
-			var handlersDic:Dictionary = _allCommand[commandName] as Dictionary;
-			if (handlersDic == null) {
+			var executorDic:Dictionary = _allOrder[orderName] as Dictionary;
+			if (executorDic == null) {
 				return;
 			}
-			for each(var fObj:IOrderExecutor in handlersDic) {
+			for each(var fObj:IOrderExecutor in executorDic) {
 				if (fObj != null) {
-					fObj.executeOrder(commandName, commandParam);
+					fObj.executeOrder(orderName, orderParam);
 				} 
 			}
 		}

@@ -7,6 +7,7 @@ package com.alex.pool
 	import com.alex.model.EnergyVector;
 	import com.alex.role.MainRole;
 	import com.alex.skill.Skill;
+	import com.alex.unit.AttackableUnit;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
 	import flash.utils.Dictionary;
@@ -96,7 +97,7 @@ package com.alex.pool
 			return (getInstance(PhysicsComponent) as PhysicsComponent).init(vDisplay, vPosition, vSpeed, vLength, vWidth, vHeight, vMass, vPhysicsType);
 		}
 		
-		public static function getSkill(vName:String, vOwnner:IPhysics, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0):Skill {
+		public static function getSkill(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0):Skill {
 			return (getInstance(Skill) as Skill).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight);
 		}
 		

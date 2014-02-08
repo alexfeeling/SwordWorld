@@ -11,7 +11,7 @@ package com.alex.pattern
 		///获取听从处理的命令
 		function getExecuteOrderList():Array;
 		
-		///处理命令
+		///执行命令
 		function executeOrder(orderName:String, orderParam:Object = null):void;
 		
 		///获取执行者ID
