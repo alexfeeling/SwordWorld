@@ -2,8 +2,8 @@ package com.alex.unit
 {
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.ForceDirection;
-	import com.alex.constant.ItemType;
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.PhysicsType;
 	import com.alex.constant.OrderConst;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
@@ -103,7 +103,7 @@ package com.alex.unit
 		
 		public function collide(unit:IPhysics, moveDir:int):Boolean
 		{
-			if (physicsComponent.physicsType == ItemType.SOLID && unit.physicsComponent.physicsType == ItemType.SOLID)
+			if (physicsComponent.physicsType == PhysicsType.SOLID && unit.physicsComponent.physicsType == PhysicsType.SOLID)
 			{
 				//刚体碰撞到刚体，停止移动，贴合
 				position.nestleUpTo(moveDir, unit);
@@ -204,7 +204,7 @@ package com.alex.unit
 				}
 			}
 			this.refreshDisplayXY();
-			if (vDirection == ForceDirection.Z_BOTTOM && collidedUnit) {
+			if (vDirection == MoveDirection.Z_BOTTOM && collidedUnit) {
 				this._physicsComponent.executeOrder(OrderConst.STAND_ON_UNIT, collidedUnit);
 			} 
 		}
@@ -216,7 +216,7 @@ package com.alex.unit
 			//先移动相应距离
 			_position.move(direction, distance);
 			
-			if (_physicsComponent.physicsType == ItemType.SOLID)
+			if (_physicsComponent.physicsType == PhysicsType.SOLID)
 			{
 				var unitList:Array = WorldMap.getInstance().getAroudItemsByMove(direction, _position);
 			}
@@ -256,7 +256,7 @@ package com.alex.unit
 		
 		public function canCollide(unit:IPhysics):Boolean
 		{
-			return this != unit && unit.physicsComponent.physicsType == ItemType.SOLID;
+			return this != unit && unit.physicsComponent.physicsType == PhysicsType.SOLID;
 		}
 	
 	}

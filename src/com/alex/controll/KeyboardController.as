@@ -2,7 +2,7 @@ package com.alex.controll
 {
 	import com.alex.animation.IAnimation;
 	import com.alex.constant.OrderConst;
-	import com.alex.constant.ForceDirection;
+	import com.alex.constant.MoveDirection;
 	import com.alex.pattern.Commander;
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.skill.Skill;
@@ -105,16 +105,16 @@ package com.alex.controll
 				}
 				switch(event.keyCode) {
 					case KEY_A:
-						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.X_LEFT);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, MoveDirection.X_LEFT);
 						break;
 					case KEY_D:
-						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.X_RIGHT);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, MoveDirection.X_RIGHT);
 						break;
 					case KEY_W:
-						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.Y_UP);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, MoveDirection.Y_UP);
 						break;
 					case KEY_S:
-						Commander.sendOrder(OrderConst.ROLE_START_MOVE, ForceDirection.Y_DOWN);
+						Commander.sendOrder(OrderConst.ROLE_START_MOVE, MoveDirection.Y_DOWN);
 						break;
 					case KEY_I://跳跃，闪避
 						Commander.sendOrder(OrderConst.ROLE_JUMP);
@@ -149,16 +149,16 @@ package com.alex.controll
 		private function onKeyRelease(event:KeyboardEvent):void {
 			switch(event.keyCode) {
 				case KEY_A:
-					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.X_LEFT);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, MoveDirection.X_LEFT);
 					break;
 				case KEY_D:
-					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.X_RIGHT);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, MoveDirection.X_RIGHT);
 					break;
 				case KEY_W:
-					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.Y_UP);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, MoveDirection.Y_UP);
 					break;
 				case KEY_S:
-					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, ForceDirection.Y_DOWN);
+					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, MoveDirection.Y_DOWN);
 					break;
 			}
 			_keyDic[event.keyCode] = 0;

@@ -4,8 +4,8 @@ package com.alex.skill
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.OrderConst;
-	import com.alex.constant.ForceDirection;
-	import com.alex.constant.ItemType;
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.PhysicsType;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.pattern.Commander;
@@ -42,12 +42,17 @@ package com.alex.skill
 		public function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, 
 				vDir:int, vSpeed:Number, vWeight:Number = 0):Skill 
 		{
-			refresh(IdMachine.getId(Skill), vPosition, InstancePool.getPhysicsComponent(this, vPosition, vSpeed, 50, 50, 50, 10, ItemType.BUBBLE));
+			//refresh(IdMachine.getId(Skill), vPosition, InstancePool.getPhysicsComponent(this, vPosition, vSpeed, 50, 50, 50, 10, PhysicsType.BUBBLE));
+			refresh(IdMachine.getId(Skill), vPosition, PhysicsComponent.make(this, vPosition, vSpeed, 50, 50, 50, 10, PhysicsType.BUBBLE));
 			//this.name = vName;
 			this._ownner = vOwnner;
 			this._physicsComponent.startMove(vDir);
 			this._lifeTime = 5000;
 			return this;
+		}
+		
+		public static function make(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:int, vWeight:int):Skill {
+			return Skill(InstancePool.getInstance(Skill)).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight);
 		}
 		
 		override protected function createUI():void {
@@ -67,10 +72,10 @@ package com.alex.skill
 		
 		///碰撞
 		override public function collide(unit:IPhysics, moveDir:int):Boolean {
-			if (unit == null || unit.physicsComponent.physicsType != ItemType.SOLID) {
+			if (unit == null || unit.physicsComponent.physicsType != PhysicsType.SOLID) {
 				return false;
 			}
-			unit.physicsComponent.forceImpact(ForceDirection.Z_TOP, this.getHitEnergy());
+			unit.physicsComponent.forceImpact(MoveDirection.Z_TOP, this.getHitEnergy());
 			this.release();
 			return true;
 		}

@@ -54,7 +54,6 @@ package
 			
 			///显示fps工具类
 			this.addChild(new Stats());
-			
 		}
 		
 	}

@@ -4,8 +4,8 @@ package com.alex.role
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.OrderConst;
-	import com.alex.constant.ForceDirection;
-	import com.alex.constant.ItemType;
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.PhysicsType;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.pattern.Commander;
@@ -54,7 +54,8 @@ package com.alex.role
 		}
 		
 		public function init(vPosition:Position):MainRole {
-			refresh(IdMachine.getId(MainRole), vPosition, InstancePool.getPhysicsComponent(this, vPosition, this._speed, 80, 60, 100, 50, ItemType.SOLID));
+			//refresh(IdMachine.getId(MainRole), vPosition, InstancePool.getPhysicsComponent(this, vPosition, this._speed, 80, 60, 100, 50, PhysicsType.SOLID));
+			refresh(IdMachine.getId(MainRole), vPosition, PhysicsComponent.make(this, vPosition, this._speed, 80, 60, 100, 50, PhysicsType.SOLID));
 			return this;
 		}
 		
@@ -87,7 +88,9 @@ package com.alex.role
 					var skillName:String = orderParam as String;
 					if (skillName != null) {
 						var sPosition:Position = this.position.copy();
-						var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?ForceDirection.X_RIGHT:ForceDirection.X_LEFT, 40, 10);
+						//var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 40, 10);
+						var skill:Skill = Skill.make(skillName, this, sPosition, 
+							this._physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 40, 10);
 						Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 					}
 					break;

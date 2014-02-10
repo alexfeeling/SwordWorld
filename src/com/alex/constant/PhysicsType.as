@@ -4,12 +4,12 @@ package com.alex.constant
 	 * ...
 	 * @author alex
 	 */
-	public class ItemType 
+	public class PhysicsType 
 	{
 		
-		public function ItemType() 
+		public function PhysicsType() 
 		{
-			throw "ItemType can't be a instance.";
+			throw "PhysicsType can't create a instance.";
 		}
 
 		///刚体，刚体与刚体间无法穿越

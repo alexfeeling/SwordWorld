@@ -1,8 +1,8 @@
 package com.alex.component
 {
 	import com.alex.constant.OrderConst;
-	import com.alex.constant.ForceDirection;
-	import com.alex.constant.ItemType;
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.PhysicsType;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.display.Tree;
@@ -129,11 +129,11 @@ package com.alex.component
 			}
 			switch (direction)
 			{
-				case ForceDirection.X_LEFT: 
+				case MoveDirection.X_LEFT: 
 					this._isMoveLeft = true;
 					this._isMoveRight = false;
 					this.faceDirection = -1;
-					if (!this.isStandOnSomething() && _physicsType == ItemType.SOLID)
+					if (!this.isStandOnSomething() && _physicsType == PhysicsType.SOLID)
 					{
 						return;
 					}
@@ -152,11 +152,11 @@ package com.alex.component
 						this._xVelocity = -this._xRunSpeed;
 					}
 					break;
-				case ForceDirection.X_RIGHT: 
+				case MoveDirection.X_RIGHT: 
 					this._isMoveRight = true;
 					this._isMoveLeft = false;
 					this.faceDirection = 1;
-					if (!this.isStandOnSomething() && _physicsType == ItemType.SOLID)
+					if (!this.isStandOnSomething() && _physicsType == PhysicsType.SOLID)
 					{
 						return;
 					}
@@ -175,10 +175,10 @@ package com.alex.component
 						this._xVelocity = this._xRunSpeed;
 					}
 					break;
-				case ForceDirection.Y_UP: 
+				case MoveDirection.Y_UP: 
 					this._isMoveUp = true;
 					this._isMoveDown = false;
-					if (!this.isStandOnSomething() && _physicsType == ItemType.SOLID)
+					if (!this.isStandOnSomething() && _physicsType == PhysicsType.SOLID)
 					{
 						return;
 					}
@@ -197,10 +197,10 @@ package com.alex.component
 						this._yVelocity = -this._yRunSpeed;
 					}
 					break;
-				case ForceDirection.Y_DOWN: 
+				case MoveDirection.Y_DOWN: 
 					this._isMoveDown = true;
 					this._isMoveUp = false;
-					if (!this.isStandOnSomething() && _physicsType == ItemType.SOLID)
+					if (!this.isStandOnSomething() && _physicsType == PhysicsType.SOLID)
 					{
 						return;
 					}
@@ -232,7 +232,7 @@ package com.alex.component
 			}
 			switch (direction)
 			{
-				case ForceDirection.X_LEFT: 
+				case MoveDirection.X_LEFT: 
 					this._isMoveLeft = false;
 					if (!this._isMoveRight && this.isStandOnSomething())
 					{
@@ -247,7 +247,7 @@ package com.alex.component
 						}
 					}
 					break;
-				case ForceDirection.X_RIGHT: 
+				case MoveDirection.X_RIGHT: 
 					this._isMoveRight = false;
 					if (!this._isMoveLeft && this.isStandOnSomething())
 					{
@@ -262,7 +262,7 @@ package com.alex.component
 						}
 					}
 					break;
-				case ForceDirection.Y_UP: 
+				case MoveDirection.Y_UP: 
 					this._isMoveUp = false;
 					if (!this._isMoveDown && this.isStandOnSomething())
 					{
@@ -277,7 +277,7 @@ package com.alex.component
 						}
 					}
 					break;
-				case ForceDirection.Y_DOWN: 
+				case MoveDirection.Y_DOWN: 
 					this._isMoveDown = false;
 					if (!this._isMoveUp && this.isStandOnSomething())
 					{
@@ -323,22 +323,22 @@ package com.alex.component
 			//}
 			switch (vDir)
 			{
-				case ForceDirection.X_LEFT: 
+				case MoveDirection.X_LEFT: 
 					this._xVelocity -= vVelocity;
 					break;
-				case ForceDirection.X_RIGHT: 
+				case MoveDirection.X_RIGHT: 
 					this._xVelocity += vVelocity;
 					break;
-				case ForceDirection.Y_UP: 
+				case MoveDirection.Y_UP: 
 					this._yVelocity -= vVelocity;
 					break;
-				case ForceDirection.Y_DOWN: 
+				case MoveDirection.Y_DOWN: 
 					this._yVelocity += vVelocity;
 					break;
-				case ForceDirection.Z_BOTTOM: 
+				case MoveDirection.Z_BOTTOM: 
 					this._zVelocity -= vVelocity;
 					break;
-				case ForceDirection.Z_TOP: 
+				case MoveDirection.Z_TOP: 
 					this._zVelocity += vVelocity;
 					break;
 			}
@@ -487,7 +487,7 @@ package com.alex.component
 				}
 				if (distance > 0)
 				{
-					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.X_RIGHT, int(distance)]);
+					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.X_RIGHT, int(distance)]);
 				}
 			}
 			else if (this._xVelocity < 0)
@@ -499,7 +499,7 @@ package com.alex.component
 				}
 				if (distance > 0)
 				{
-					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.X_LEFT, int(distance)]);
+					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.X_LEFT, int(distance)]);
 				}
 			}
 			else
@@ -547,7 +547,7 @@ package com.alex.component
 				}
 				if (distance > 0)
 				{
-					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.Y_DOWN, int(distance)]);
+					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Y_DOWN, int(distance)]);
 				}
 			}
 			else if (this._yVelocity < 0)
@@ -559,7 +559,7 @@ package com.alex.component
 				}
 				if (distance > 0)
 				{
-					(this._displayObj as IOrderExecutor).executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.Y_UP, int(distance)]);
+					(this._displayObj as IOrderExecutor).executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Y_UP, int(distance)]);
 				}
 			}
 			else
@@ -616,7 +616,7 @@ package com.alex.component
 					this._isDropping = true;
 					this._isFlying = false;
 				}
-				this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.Z_TOP, int(distance)]);
+				this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Z_TOP, int(distance)]);
 				if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube())) 
 				{
 					this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
@@ -633,12 +633,12 @@ package com.alex.component
 			}
 			else if (!this.isStandOnSomething())//在空中
 			{
-				if (_physicsType == ItemType.SOLID)
+				if (_physicsType == PhysicsType.SOLID)
 				{
 					this._isDropping = true;
 					distance = 0.5 * a * tempTime * tempTime - this._zVelocity * tempTime;
 					this._zVelocity -= GRAVITY * passedTime / 100;
-					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [ForceDirection.Z_BOTTOM, int(distance)]);
+					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Z_BOTTOM, int(distance)]);
 				}
 			}
 			if (this._isRelease) {
@@ -728,7 +728,7 @@ package com.alex.component
 					break;
 				case OrderConst.ROLE_JUMP:
 					if (this._position.elevation <= 0 || this.unitLiftMe) {
-						this.forceImpact(ForceDirection.Z_TOP, int(orderParam));
+						this.forceImpact(MoveDirection.Z_TOP, int(orderParam));
 					}
 					break;
 				case OrderConst.CANCEL_LIFT_UNIT:
@@ -780,6 +780,12 @@ package com.alex.component
 		///是否站立在某些东西之上
 		public function isStandOnSomething():Boolean {
 			return this._position.elevation <= 0 || this.unitLiftMe;
+		}
+		
+		
+		public static function make(display:IDisplay, position:Position, speed:int, length:int, width:int, height:int, mass:int, physicsType:int):PhysicsComponent {
+			//InstancePool.getPhysicsComponent(display, position, speed, length, width, height, mass, physicsType);
+			return PhysicsComponent(InstancePool.getInstance(PhysicsComponent)).init(display, position, speed, length, width, height, mass, physicsType);
 		}
 	
 	}

@@ -56,6 +56,10 @@ package com.alex.worldmap
 			return this;
 		}
 		
+		public static function make(vBlockX:int, vBlockY:int):MapBlock {
+			return MapBlock(InstancePool.getInstance(MapBlock)).init(vBlockX, vBlockY);
+		}
+		
 		///添加单位到地图中
 		//public function addItem(item:IPhysics, position:Position = null):void {
 			//if (item == null) {

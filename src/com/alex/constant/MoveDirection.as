@@ -1,10 +1,10 @@
 package com.alex.constant 
 {
 	/**
-	 * ...
+	 * 移动方向
 	 * @author alex
 	 */
-	public class ForceDirection 
+	public class MoveDirection 
 	{
 		
 		public static const X_LEFT:int = 0;
@@ -19,9 +19,9 @@ package com.alex.constant
 		
 		public static const Z_BOTTOM:int = 5;
 		
-		public function ForceDirection() 
+		public function MoveDirection() 
 		{
-			
+			throw "MoveDirection can't create a instance.";
 		}
 		
 	}

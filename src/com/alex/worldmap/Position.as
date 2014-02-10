@@ -1,7 +1,7 @@
 package com.alex.worldmap 
 {
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.ForceDirection;
+	import com.alex.constant.MoveDirection;
 	import com.alex.display.IPhysics;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
@@ -45,37 +45,42 @@ package com.alex.worldmap
 			return this;
 		}
 		
+		public static function make(gridX:int = 0, gridY:int = 0, insideX:int = -1, insideY:int = -1, elevation:int = 0):Position {
+			//return InstancePool.getPosition(gridX, gridY, insideX, insideY, elevation);
+			return (InstancePool.getInstance(Position) as Position).init(gridX, gridY, insideX, insideY, elevation);
+		}
+		
 		//与目标单位贴合
 		public function nestleUpTo(vDirection:int, vTarget:IPhysics):void {
 			var myPhysicsComponent:PhysicsComponent = this.phycItem.physicsComponent;
 			var targetPhysicsComponent:PhysicsComponent = vTarget.physicsComponent;
 			var targetPosition:Position = vTarget.position;
 			switch(vDirection) {
-				case ForceDirection.X_LEFT:
+				case MoveDirection.X_LEFT:
 					this.gridX = targetPosition.gridX;
 					this.insideX = targetPosition.insideX + 
 						((myPhysicsComponent.length + targetPhysicsComponent.length) >> 1);
 					break;
-				case ForceDirection.X_RIGHT:
+				case MoveDirection.X_RIGHT:
 					this.gridX = targetPosition.gridX;
 					this.insideX = targetPosition.insideX -
 						((myPhysicsComponent.length + targetPhysicsComponent.length) >> 1);
 					break;
-				case ForceDirection.Y_UP:
+				case MoveDirection.Y_UP:
 					this.gridY = targetPosition.gridY;
 					this.insideY = targetPosition.insideY + 
 						((myPhysicsComponent.width + targetPhysicsComponent.width) >> 1);
 					break;
-				case ForceDirection.Y_DOWN:
+				case MoveDirection.Y_DOWN:
 					this.gridY = targetPosition.gridY;
 					this.insideY = targetPosition.insideY - 
 						((myPhysicsComponent.width + targetPhysicsComponent.width) >> 1);
 					break;
-				case ForceDirection.Z_BOTTOM:
+				case MoveDirection.Z_BOTTOM:
 					this.elevation = targetPosition.elevation + targetPhysicsComponent.height;
 					myPhysicsComponent.forceStopZ();
 					break;
-				case ForceDirection.Z_TOP:
+				case MoveDirection.Z_TOP:
 					this.elevation = targetPosition.elevation - targetPhysicsComponent.height;
 					myPhysicsComponent.forceStopZ();
 					break;
@@ -84,23 +89,23 @@ package com.alex.worldmap
 		
 		public function move(vDirection:int, vDistance:int):void {
 			switch(vDirection) {
-				case ForceDirection.X_LEFT://左
+				case MoveDirection.X_LEFT://左
 					this.insideX -= vDistance;
 					break;
-				case ForceDirection.X_RIGHT://右
+				case MoveDirection.X_RIGHT://右
 					this.insideX += vDistance;
 					break;
-				case ForceDirection.Y_UP://上
+				case MoveDirection.Y_UP://上
 					this.insideY -= vDistance;
 					break;
-				case ForceDirection.Y_DOWN://下
+				case MoveDirection.Y_DOWN://下
 					this.insideY += vDistance;
 					break;
-				case ForceDirection.Z_BOTTOM://下落
+				case MoveDirection.Z_BOTTOM://下落
 					this.elevation -= vDistance;
 					this.elevation = Math.max(this.elevation, 0);
 					break;
-				case ForceDirection.Z_TOP://上升
+				case MoveDirection.Z_TOP://上升
 					this.elevation += vDistance;
 					break;
 			}
@@ -197,7 +202,9 @@ package com.alex.worldmap
 		
 		///复制格子
 		public function copy():Position {
-			return InstancePool.getPosition(this._gridX, this._gridY, 
+			//return InstancePool.getPosition(this._gridX, this._gridY, 
+						//this.insideX, this.insideY, this.elevation);
+			return Position(InstancePool.getInstance(Position)).init(this._gridX, this._gridY, 
 						this.insideX, this.insideY, this.elevation);
 		}
 		

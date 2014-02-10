@@ -75,36 +75,6 @@ package com.alex.pool
 			}
 		}
 		
-		public static function getTree(vPosition:Position):Tree {
-			return (getInstance(Tree) as Tree).init(vPosition);
-		}
-		
-		//public static function getMainRole(vPosition:Position):MainRole {
-			//return (getInstance(MainRole) as MainRole).init(vPosition);
-		//}
-		
-		public static function getPosition(vGridX:int = 0, vGridY:int = 0, 
-									vInsideX:Number = -1, vInsideY:Number = -1,
-									vElevation:Number = 0):Position {
-			return (getInstance(Position) as Position).init(vGridX, vGridY, vInsideX, vInsideY, vElevation);
-		}
-		
-		public static function getMapBlock(vBlockX:int, VBlockY:int):MapBlock {
-			return (getInstance(MapBlock) as MapBlock).init(vBlockX, VBlockY);
-		}
-		
-		public static function getPhysicsComponent(vDisplay:IDisplay, vPosition:Position, vSpeed:Number, vLength:Number, vWidth:Number, vHeight:Number, vMass:Number, vPhysicsType:int):PhysicsComponent {
-			return (getInstance(PhysicsComponent) as PhysicsComponent).init(vDisplay, vPosition, vSpeed, vLength, vWidth, vHeight, vMass, vPhysicsType);
-		}
-		
-		public static function getSkill(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0):Skill {
-			return (getInstance(Skill) as Skill).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight);
-		}
-		
-		public static function getEnergyVector(vDir:int, vEnergy:Number):EnergyVector {
-			return (getInstance(EnergyVector) as EnergyVector).init(vDir, vEnergy);
-		}
-		
 	}
 
 }

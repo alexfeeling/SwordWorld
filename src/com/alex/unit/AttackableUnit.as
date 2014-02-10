@@ -1,7 +1,7 @@
 package com.alex.unit 
 {
 	import com.alex.component.PhysicsComponent;
-	import com.alex.constant.ForceDirection;
+	import com.alex.constant.MoveDirection;
 	import com.alex.skill.SkillData;
 	import com.alex.unit.BaseUnit;
 	import com.alex.util.Cube;

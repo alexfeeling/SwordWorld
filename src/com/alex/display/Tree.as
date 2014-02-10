@@ -5,8 +5,8 @@ package com.alex.display
 	import com.alex.animation.IAnimation;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.OrderConst;
-	import com.alex.constant.ForceDirection;
-	import com.alex.constant.ItemType;
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.PhysicsType;
 	import com.alex.pattern.Commander;
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
@@ -41,9 +41,14 @@ package com.alex.display
 		}
 		
 		public function init(vPostion:Position):Tree {
-			this.refresh(IdMachine.getId(Tree), vPostion, InstancePool.getPhysicsComponent(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, ItemType.SOLID));
+			//this.refresh(IdMachine.getId(Tree), vPostion, InstancePool.getPhysicsComponent(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, PhysicsType.SOLID));
+			this.refresh(IdMachine.getId(Tree), vPostion, PhysicsComponent.make(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, PhysicsType.SOLID));
 			this.position.elevation = 200;
 			return this;
+		}
+		
+		public static function make(vPosition:Position):Tree {
+			return Tree(InstancePool.getInstance(Tree)).init(vPosition);
 		}
 		
 		override protected function createUI():void 

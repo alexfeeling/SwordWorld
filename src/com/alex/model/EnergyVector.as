@@ -1,6 +1,6 @@
 package com.alex.model 
 {
-	import com.alex.constant.ForceDirection;
+	import com.alex.constant.MoveDirection;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	/**
@@ -12,7 +12,7 @@ package com.alex.model
 		
 		public var energy:Number = 0;
 		
-		public var direction:int = ForceDirection.X_RIGHT;
+		public var direction:int = MoveDirection.X_RIGHT;
 		
 		public function EnergyVector() 
 		{
@@ -30,7 +30,7 @@ package com.alex.model
 		public function release():void 
 		{
 			this.energy = 0;
-			this.direction = ForceDirection.X_RIGHT;
+			this.direction = MoveDirection.X_RIGHT;
 			InstancePool.recycle(this);
 		}
 		
