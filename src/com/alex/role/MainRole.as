@@ -6,8 +6,8 @@ package com.alex.role
 	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
-	import com.alex.display.BasePhysicsItem;
 	import com.alex.display.IDisplay;
+	import com.alex.display.IPhysics;
 	import com.alex.pattern.Commander;
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
@@ -98,9 +98,10 @@ package com.alex.role
 					this._physicsComponent.stopMove(int(orderParam));
 					break;
 				case OrderConst.ROLE_JUMP:
-					if (this.position.elevation <= 0) {
-						this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
-					}
+					this._physicsComponent.executeOrder(OrderConst.ROLE_JUMP, 60);
+					//if (this.position.elevation <= 0) {
+						//this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
+					//}
 					break;
 				default:
 					super.executeOrder(orderName, orderParam);

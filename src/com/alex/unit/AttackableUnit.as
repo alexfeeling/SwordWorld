@@ -110,7 +110,7 @@ package com.alex.unit
 					if (!detectTarget) {
 						continue;
 					}
-					if (_attackCube.intersects(detectTarget.toCube())) {
+					if (_attackCube.intersects(detectTarget.physicsComponent.toCube())) {
 						targetList.push(detectTarget);
 						if (--maxTargetNum <= 0) {
 							return targetList;
@@ -119,10 +119,6 @@ package com.alex.unit
 				}
 			}
 			return targetList;
-		}
-		
-		public function toCube():Cube {
-			return new Cube(position.globalX, position.globalY, position.elevation, physicsComponent.length, physicsComponent.width, physicsComponent.height);
 		}
 		
 		public function attackHurt():void {

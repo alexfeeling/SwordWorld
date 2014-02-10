@@ -250,7 +250,11 @@ package com.alex.worldmap
 				this._allMapGridDic[position.gridX][position.gridY] = new Dictionary();
 			}
 			this._allMapGridDic[position.gridX][position.gridY][vItem.id] = vItem;
-			vItem.refreshItemXY();
+			//vItem.refreshDisplayXY();
+			if (vItem is IDisplay) 
+			{
+				(vItem as IDisplay).refreshDisplayXY();
+			}
 		}
 		
 		public function removeGridItem(vItem:IPhysics):void {
@@ -320,71 +324,74 @@ package com.alex.worldmap
 		}
 		
 		///单位移动，如果步伐过大，会将步伐距离切割为数次移动
-		private static var STEP:int = 20;
+		//private static var STEP:int = 20;
 		///direction:0左，1右，2上，3下
-		public function itemMove(vItem:IPhysics, vDirection:int, vDistance:Number):void {
-			var tDistance:Number = vDistance;
-			while (tDistance > STEP) {
-				var isHit:Boolean = getInstance().f_itemMove(vItem, vDirection, STEP);
-				if (isHit) {
-					vItem.refreshItemXY();
-					return;
-				}
-				tDistance -= STEP;
-			}
-			getInstance().f_itemMove(vItem, vDirection, tDistance);
-			vItem.refreshItemXY();
-		}
-		
+		//public function itemMove(vItem:IPhysics, vDirection:int, vDistance:Number):void {
+			//var tDistance:Number = vDistance;
+			//while (tDistance > STEP) {
+				//var isHit:Boolean = getInstance().f_itemMove(vItem, vDirection, STEP);
+				//if (isHit) {
+					//vItem.refreshDisplayXY();
+					//return;
+				//}
+				//tDistance -= STEP;
+			//}
+			//getInstance().f_itemMove(vItem, vDirection, tDistance);
+			//vItem.refreshDisplayXY();
+		//}
+		//
 		///单位移动,direction:0左，1右，2上，3下
 		//0无碰撞 1碰撞 2释放 XXXX
-		private function f_itemMove(item:IPhysics, direction:int, distance:Number):Boolean {
-			var pos:Position = item.position;
-			if (pos == null) {
-				return false;
-			}
+		//private function f_itemMove(item:IPhysics, direction:int, distance:Number):Boolean {
+			//var pos:Position = item.position;
+			//if (pos == null) {
+				//return false;
+			//}
 			//先移动相应距离
-			pos.move(direction, distance);
-			
-			if (item.physicsComponent.physicsType == ItemType.SOLID) {
-				var itemList:Array = this.getAroudItemsByMove(direction, item.position);
-			} else {
-				itemList = this.getAroudItems(item.position);
-			}
-			
-			var isHitItem:Boolean = false;
+			//pos.move(direction, distance);
+			//
+			//if (item.physicsComponent.physicsType == ItemType.SOLID) {
+				//var itemList:Array = this.getAroudItemsByMove(direction, item.position);
+			//} else {
+				//itemList = this.getAroudItems(item.position);
+			//}
+			//
+			//var isHitItem:Boolean = false;
 			///移动结果：0无碰撞 1碰撞 2释放
-			for (var i:int = 0; i < itemList.length; i++) {
-				var itemDic:Dictionary = itemList[i] as Dictionary;
-				if (itemDic == null) {
-					continue;
-				}
-				for each(var tempItem:IPhysics in itemDic) {
-					if (tempItem == item || 
-						(tempItem is Skill && (tempItem as Skill).ownner == item) ||
-						(item is Skill && (item as Skill).ownner == tempItem))
-					{
-						continue;
-					}
-					if (physicsItemHitTest(item, tempItem)) {
-						if (item.physicsComponent.physicsType == ItemType.BUBBLE) {
-							var skillItem:Skill = item as Skill;
-							if (skillItem) {//我是技能，撞到你了吧！！
-								skillItem.collide(tempItem);
-								return false;
-							}
-						} else if (item.physicsComponent.physicsType == ItemType.SOLID) {
-							if (tempItem.physicsComponent.physicsType == ItemType.SOLID) {
-								isHitItem = true;
+			//for (var i:int = 0; i < itemList.length; i++) {
+				//var itemDic:Dictionary = itemList[i] as Dictionary;
+				//if (itemDic == null) {
+					//continue;
+				//}
+				//for each(var tempItem:IPhysics in itemDic) {
+					//if (tempItem == item || 
+						//(tempItem is Skill && (tempItem as Skill).ownner == item) ||
+						//(item is Skill && (item as Skill).ownner == tempItem))
+					//{
+						//continue;
+					//}
+					//if (item.toCube().intersects(tempItem.toCube())) {
+						//item.collide(tempItem, direction);
+					//}
+					//if (physicsItemHitTest(item, tempItem)) {
+						//if (item.physicsComponent.physicsType == ItemType.BUBBLE) {
+							//var skillItem:Skill = item as Skill;
+							//if (skillItem) {//我是技能，撞到你了吧！！
+								//skillItem.collide(tempItem, direction);
+								//return false;
+							//}
+						//} else if (item.physicsComponent.physicsType == ItemType.SOLID) {
+							//if (tempItem.physicsComponent.physicsType == ItemType.SOLID) {
+								//isHitItem = true;
 								//刚体碰撞到刚体，停止移动，贴合
-								item.position.nestleUpTo(direction, tempItem);
-							} 
-						}  
-					}
-				}
-			}
-			return isHitItem;
-		}
+								//item.position.nestleUpTo(direction, tempItem);
+							//} 
+						//}  
+					//}
+				//}
+			//}
+			//return isHitItem;
+		//}
 		
 		public function getAroudItemsByMove(vDir:int, vPosition:Position):Array {
 			var result:Array = [];
@@ -548,7 +555,6 @@ package com.alex.worldmap
 		public function getExecuteOrderList():Array 
 		{
 			return [
-						OrderConst.MAP_ITEM_MOVE,
 						OrderConst.ADD_ITEM_TO_WORLD_MAP,
 						OrderConst.REMOVE_ITEM_FROM_WORLD_MAP
 					];
@@ -557,14 +563,6 @@ package com.alex.worldmap
 		public function executeOrder(commandName:String, commandParam:Object = null):void 
 		{
 			switch(commandName) {
-				case OrderConst.MAP_ITEM_MOVE:
-					var display:IPhysics = commandParam.display as IPhysics;
-					var direction:int = int(commandParam.direction);
-					var distance:Number = Number(commandParam.distance);
-					if (display != null && !isNaN(distance)) {
-						this.itemMove(display, direction, distance);
-					}
-					break;
 				case OrderConst.ADD_ITEM_TO_WORLD_MAP://添加对象到地图中
 					var item:IPhysics = commandParam as IPhysics;
 					if (item == null) {

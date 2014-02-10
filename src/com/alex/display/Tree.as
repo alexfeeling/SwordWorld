@@ -11,6 +11,7 @@ package com.alex.display
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
+	import com.alex.unit.AttackableUnit;
 	import com.alex.unit.BaseUnit;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.MapBlock;
@@ -28,7 +29,7 @@ package com.alex.display
 	 * ...
 	 * @author alex
 	 */
-	public class Tree extends BaseUnit
+	public class Tree extends AttackableUnit
 	{
 		
 		[Embed(source="/../bin/asset/role/head.jpg")]

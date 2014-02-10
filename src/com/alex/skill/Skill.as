@@ -6,7 +6,6 @@ package com.alex.skill
 	import com.alex.constant.OrderConst;
 	import com.alex.constant.ForceDirection;
 	import com.alex.constant.ItemType;
-	import com.alex.display.BasePhysicsItem;
 	import com.alex.display.IDisplay;
 	import com.alex.display.IPhysics;
 	import com.alex.pattern.Commander;
@@ -67,12 +66,18 @@ package com.alex.skill
 		}
 		
 		///碰撞
-		public function collide(item:IPhysics):void {
-			if (item == null || item.physicsComponent.physicsType != ItemType.SOLID) {
-				return;
+		override public function collide(unit:IPhysics, moveDir:int):Boolean {
+			if (unit == null || unit.physicsComponent.physicsType != ItemType.SOLID) {
+				return false;
 			}
-			item.physicsComponent.forceImpact(ForceDirection.Z_TOP, this.getHitEnergy());
+			unit.physicsComponent.forceImpact(ForceDirection.Z_TOP, this.getHitEnergy());
 			this.release();
+			return true;
+		}
+		
+		override public function canCollide(unit:IPhysics):Boolean 
+		{
+			return super.canCollide(unit) && unit != this.ownner;
 		}
 		
 		/* INTERFACE com.alex.display.IDisplay */

@@ -1,28 +1,28 @@
 package com.alex.display 
 {
 	import com.alex.component.PhysicsComponent;
+	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.IRecycle;
+	import com.alex.util.Cube;
 	import com.alex.worldmap.Position;
 	
 	/**
 	 * 拥有物理特性的对象接口
 	 * @author alex
 	 */
-	public interface IPhysics extends IRecycle
+	public interface IPhysics extends IOrderExecutor, IRecycle
 	{
 		
 		function get position():Position;
-		
-		//function set position(value:Position):void;
 		
 		function get id():String;
 		
 		///物理组件
 		function get physicsComponent():PhysicsComponent;
 		
-		function refreshItemXY():void;
+		///能否碰撞此单位
+		function canCollide(unit:IPhysics):Boolean;
 		
-		//function onHit():void;
 	}
 	
 }

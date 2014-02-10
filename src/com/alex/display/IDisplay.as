@@ -15,6 +15,8 @@ package com.alex.display
 		///刷新海拔高度
 		function refreshElevation():void;
 		
+		function refreshDisplayXY():void;
+		
 	}
 	
 }

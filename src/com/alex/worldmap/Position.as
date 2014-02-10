@@ -18,12 +18,15 @@ package com.alex.worldmap
 		private var _gridY:int;
 		
 		///格子内坐标X
-		private var _insideX:Number;
+		private var _insideX:int;
 		///格子内坐标Y
-		private var _insideY:Number;
+		private var _insideY:int;
 		
 		///海拔高度
-		public var elevation:Number;
+		public var elevation:int;
+		
+		///相对海拔高度
+		public var relativeElevation:int;
 		
 		public function Position() 
 		{
@@ -31,8 +34,8 @@ package com.alex.worldmap
 		}
 		
 		public function init(vGridX:int = 0, vGridY:int = 0, 
-								vInsideX:Number = -1, vInsideY:Number = -1,
-								vElevation:Number = 0):Position 
+								vInsideX:int = -1, vInsideY:int = -1,
+								vElevation:int = 0):Position 
 		{
 			this._gridX = vGridX;
 			this._gridY = vGridY;
@@ -150,20 +153,20 @@ package com.alex.worldmap
 			WorldMap.getInstance().refreshGridItem(phycItem, gridX, orgin);
 		}
 		
-		public function get globalX():Number {
+		public function get globalX():int {
 			return this.gridX * MapBlock.GRID_WIDTH + this.insideX;
 		}
 		
-		public function get globalY():Number {
+		public function get globalY():int {
 			return this.gridY * MapBlock.GRID_HEIGHT + this.insideY;
 		}
 		
-		public function get insideX():Number 
+		public function get insideX():int 
 		{
 			return _insideX;
 		}
 		
-		public function set insideX(value:Number):void 
+		public function set insideX(value:int):void 
 		{
 			_insideX = int(value);
 			if (_insideX < 0) {
@@ -175,12 +178,12 @@ package com.alex.worldmap
 			} 
 		}
 		
-		public function get insideY():Number 
+		public function get insideY():int 
 		{
 			return _insideY;
 		}
 		
-		public function set insideY(value:Number):void 
+		public function set insideY(value:int):void 
 		{
 			_insideY = int(value);
 			if (_insideY < 0) {

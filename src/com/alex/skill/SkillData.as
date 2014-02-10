@@ -1,11 +1,15 @@
 package com.alex.skill 
 {
+	import com.alex.util.Cube;
+	import com.alex.component.PhysicsComponent;
+	import com.alex.display.IPhysics;
+	import com.alex.worldmap.Position;
 	import flash.geom.Point;
 	/**
 	 * ...
 	 * @author alex
 	 */
-	public class SkillData 
+	public class SkillData
 	{
 		
 		public var name:String;
@@ -26,6 +30,7 @@ package com.alex.skill
 		{
 			
 		}
+		
 		
 	}
 
