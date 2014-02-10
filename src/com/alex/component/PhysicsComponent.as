@@ -755,7 +755,7 @@ package com.alex.component
 			Commander.cancelExecutor(this);
 			InstancePool.recycle(this);
 			if (this.unitLiftMe) {
-				this.unitLiftMe.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
+				this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
 				this.unitLiftMe = null;
 			}
 			for each (var unit:IPhysics in this.unitStandOnMeDic) {
@@ -786,6 +786,13 @@ package com.alex.component
 		public static function make(display:IDisplay, position:Position, speed:int, length:int, width:int, height:int, mass:int, physicsType:int):PhysicsComponent {
 			//InstancePool.getPhysicsComponent(display, position, speed, length, width, height, mass, physicsType);
 			return PhysicsComponent(InstancePool.getInstance(PhysicsComponent)).init(display, position, speed, length, width, height, mass, physicsType);
+		}
+		
+		/* INTERFACE com.alex.pool.IRecycle */
+		
+		public function isRelease():Boolean 
+		{
+			return this._isRelease;
 		}
 	
 	}

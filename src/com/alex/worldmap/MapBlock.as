@@ -207,6 +207,13 @@ package com.alex.worldmap
 			}
 		}
 		
+		/* INTERFACE com.alex.pool.IRecycle */
+		
+		public function isRelease():Boolean 
+		{
+			return this._isRelease;
+		}
+		
 	}
 
 }

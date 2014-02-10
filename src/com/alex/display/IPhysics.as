@@ -13,9 +13,9 @@ package com.alex.display
 	public interface IPhysics extends IOrderExecutor, IRecycle
 	{
 		
-		function get position():Position;
-		
 		function get id():String;
+		
+		function get position():Position;
 		
 		///物理组件
 		function get physicsComponent():PhysicsComponent;

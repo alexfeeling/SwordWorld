@@ -145,7 +145,7 @@ package com.alex.worldmap
 				var differBlockYNum:int = (newBlockY - MIDDLE_BLOCK_Y) * BLOCK_Y_SIZE;
 				if (mapGridObj.gridX != null && mapGridObj.gridY != null)
 				{
-					var position:Position = Position.make(newBlockX * BLOCK_X_SIZE + int(mapGridObj.gridX), newBlockY * BLOCK_Y_SIZE + int(mapGridObj.gridY)); 
+					var position:Position = Position.make(newBlockX * BLOCK_X_SIZE + int(mapGridObj.gridX), newBlockY * BLOCK_Y_SIZE + int(mapGridObj.gridY));
 					if (mapGridObj.insideX != null)
 					{
 						position.insideX = mapGridObj.insideX;
@@ -162,9 +162,9 @@ package com.alex.worldmap
 				switch (mapGridObj.type)
 				{
 					//case "wall": //墙格，无法通过的无形障碍格
-						//var gridItem:IMapGridItem = new WallGrid(position);
-						//newMapBlock.addItem(gridItem);
-						//break;
+					//var gridItem:IMapGridItem = new WallGrid(position);
+					//newMapBlock.addItem(gridItem);
+					//break;
 					case "tree": //树
 						//var displayItem:IDisplay = InstancePool.getTree(position);
 						var displayItem:IDisplay = Tree.make(position);
@@ -177,7 +177,7 @@ package com.alex.worldmap
 						{
 							throw "error";
 						}
-						this._mainRole = new MainRole().init(position); // InstancePool.getMainRole(position);
+						this._mainRole = MainRole.make(position); //new MainRole().init(position); // InstancePool.getMainRole(position);
 						this.addGridItem(this._mainRole);
 						this._mapGridItemSp.addChild(this._mainRole.toDisplayObject());
 						var mapX:Number = (STAGE_WIDTH >> 1) - this._mainRole.toDisplayObject().x;
@@ -191,68 +191,68 @@ package com.alex.worldmap
 		
 		//public function addMapBlock(mapBlock:MapBlock):void
 		//{
-			//var mapXBlockDic:Dictionary = this._allMapBlockDic[mapBlock.blockX] as Dictionary;
-			//if (mapXBlockDic == null)
-			//{
-				//mapXBlockDic = new Dictionary();
-				//this._allMapBlockDic[mapBlock.blockX] = mapXBlockDic;
-			//}
-			//else if (mapXBlockDic[mapBlock.blockY] != null && mapXBlockDic[mapBlock.blockY] is IRecycle)
-			//{
-				//该位置已经有对象，释放他
-				//(mapXBlockDic[mapBlock.blockY] as IRecycle).release();
-				//mapXBlockDic[mapBlock.blockY] = null;
-			//}
-			//mapXBlockDic[mapBlock.blockY] = mapBlock;
+		//var mapXBlockDic:Dictionary = this._allMapBlockDic[mapBlock.blockX] as Dictionary;
+		//if (mapXBlockDic == null)
+		//{
+		//mapXBlockDic = new Dictionary();
+		//this._allMapBlockDic[mapBlock.blockX] = mapXBlockDic;
+		//}
+		//else if (mapXBlockDic[mapBlock.blockY] != null && mapXBlockDic[mapBlock.blockY] is IRecycle)
+		//{
+		//该位置已经有对象，释放他
+		//(mapXBlockDic[mapBlock.blockY] as IRecycle).release();
+		//mapXBlockDic[mapBlock.blockY] = null;
+		//}
+		//mapXBlockDic[mapBlock.blockY] = mapBlock;
 		//}
 		
 		//public function getMapBlock(blockX:int, blockY:int):MapBlock
 		//{
-			//if ((this._allMapBlockDic[blockX] as Dictionary) == null)
-			//{
-				//return null;
-			//}
-			//return this._allMapBlockDic[blockX][blockY] as MapBlock;
+		//if ((this._allMapBlockDic[blockX] as Dictionary) == null)
+		//{
+		//return null;
+		//}
+		//return this._allMapBlockDic[blockX][blockY] as MapBlock;
 		//}
 		
 		///删除单个地图块
 		//private function removeMapBlock(blockX:int, blockY:int):void
 		//{
-			//this.sendCommand(OrderConst.REMOVE_MAP_BLOCK, {blockX: blockX, blockY: blockY});
-			//if (this._allMapBlockDic[blockX] == null)
-			//{
-				//return;
-			//}
-			//if (this._allMapBlockDic[blockX][blockY] != null)
-			//{
-				//this._allMapBlockDic[blockX][blockY] = null;
-				//delete this._allMapBlockDic[blockX][blockY];
-			//}
+		//this.sendCommand(OrderConst.REMOVE_MAP_BLOCK, {blockX: blockX, blockY: blockY});
+		//if (this._allMapBlockDic[blockX] == null)
+		//{
+		//return;
+		//}
+		//if (this._allMapBlockDic[blockX][blockY] != null)
+		//{
+		//this._allMapBlockDic[blockX][blockY] = null;
+		//delete this._allMapBlockDic[blockX][blockY];
+		//}
 		//}
 		//
 		///删除整列地图块
 		//private function removeMapBlockByX(blockX:int):void
 		//{
-			//this.sendCommand(OrderConst.REMOVE_ALL_COLUMN_MAP_BLOCK, blockX);
-			//if (this._allMapBlockDic[blockX] != null)
-			//{
-				//this._allMapBlockDic[blockX] = null;
-				//delete this._allMapBlockDic[blockX];
-			//}
+		//this.sendCommand(OrderConst.REMOVE_ALL_COLUMN_MAP_BLOCK, blockX);
+		//if (this._allMapBlockDic[blockX] != null)
+		//{
+		//this._allMapBlockDic[blockX] = null;
+		//delete this._allMapBlockDic[blockX];
+		//}
 		//}
 		//
 		///删除整行地图块
 		//private function removeMapBlockByY(blockY:int):void
 		//{
-			//this.sendCommand(OrderConst.REMOVE_ALL_ROW_MAP_BLOCK, blockY);
-			//for each (var mdy:Dictionary in this._allMapBlockDic)
-			//{
-				//if (mdy != null && mdy[blockY] != null)
-				//{
-					//mdy[blockY] = null;
-					//delete mdy[blockY];
-				//}
-			//}
+		//this.sendCommand(OrderConst.REMOVE_ALL_ROW_MAP_BLOCK, blockY);
+		//for each (var mdy:Dictionary in this._allMapBlockDic)
+		//{
+		//if (mdy != null && mdy[blockY] != null)
+		//{
+		//mdy[blockY] = null;
+		//delete mdy[blockY];
+		//}
+		//}
 		//}
 		
 		public function getGridItemDic(vGridX:int, vGridY:int):Dictionary

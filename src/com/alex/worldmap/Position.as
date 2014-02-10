@@ -21,6 +21,7 @@ package com.alex.worldmap
 		private var _insideX:int;
 		///格子内坐标Y
 		private var _insideY:int;
+		private var _isRelease:Boolean;
 		
 		///海拔高度
 		public var elevation:int;
@@ -33,7 +34,7 @@ package com.alex.worldmap
 			
 		}
 		
-		public function init(vGridX:int = 0, vGridY:int = 0, 
+		protected function init(vGridX:int = 0, vGridY:int = 0, 
 								vInsideX:int = -1, vInsideY:int = -1,
 								vElevation:int = 0):Position 
 		{
@@ -42,6 +43,7 @@ package com.alex.worldmap
 			this._insideX = vInsideX == -1?MapBlock.GRID_WIDTH / 2:vInsideX;
 			this._insideY = vInsideY == -1?MapBlock.GRID_HEIGHT / 2:vInsideY;
 			this.elevation = vElevation;
+			this._isRelease = false;
 			return this;
 		}
 		
@@ -212,6 +214,10 @@ package com.alex.worldmap
 		
 		public function release():void 
 		{
+			if (this._isRelease) {
+				throw "already release.";
+			}
+			this._isRelease = true;
 			InstancePool.recycle(this);
 			this.phycItem = null;
 			this._gridX = 0;
@@ -219,6 +225,13 @@ package com.alex.worldmap
 			this.insideX = 0;
 			this.insideY = 0;
 			this.elevation = 0;
+		}
+		
+		/* INTERFACE com.alex.pool.IRecycle */
+		
+		public function isRelease():Boolean 
+		{
+			return this._isRelease;
 		}
 		
 	}

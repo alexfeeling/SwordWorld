@@ -43,6 +43,10 @@ package com.alex.constant
 		public static const LIFT_UNIT:String = "unit_stand_on_me";
 		
 		public static const CANCEL_LIFT_UNIT:String = "unit_cancel_stand_on_me";
+		
+		public static const LIFE_EMPTY:String = "life_empty";
+		
+		public static const DIED_COMPLETE:String = "died_complete";
 	}
 
 }

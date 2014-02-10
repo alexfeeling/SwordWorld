@@ -1,7 +1,8 @@
-package com.alex.role 
+package com.alex.role
 {
 	import com.alex.animation.AnimationManager;
 	import com.alex.animation.IAnimation;
+	import com.alex.component.AttributeComponent;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.OrderConst;
 	import com.alex.constant.MoveDirection;
@@ -34,111 +35,124 @@ package com.alex.role
 	public class MainRole extends AttackableUnit
 	{
 		
-		[Embed(source="/../bin/asset/role/run.swf", symbol="RoleRun")]
+		[Embed(source="/../bin/asset/role/run.swf",symbol="RoleRun")]
 		public var RUN_CLASS:Class;
 		
 		private var _speed:Number = 25;
 		
 		private static var _instance:MainRole;
 		
-		public function MainRole() 
+		public function MainRole()
 		{
-			if (_instance) {
+			if (_instance)
+			{
 				throw "MainRole只能有一个对象";
 			}
 			_instance = this;
 		}
 		
-		public static function getInstance():MainRole {
+		public static function getInstance():MainRole
+		{
 			return _instance;
 		}
 		
-		public function init(vPosition:Position):MainRole {
-			//refresh(IdMachine.getId(MainRole), vPosition, InstancePool.getPhysicsComponent(this, vPosition, this._speed, 80, 60, 100, 50, PhysicsType.SOLID));
+		protected function init(vPosition:Position):MainRole
+		{
 			refresh(IdMachine.getId(MainRole), vPosition, PhysicsComponent.make(this, vPosition, this._speed, 80, 60, 100, 50, PhysicsType.SOLID));
+			refreshAttribute(AttributeComponent.make(this, 100, 100));
 			return this;
 		}
 		
+		public static function make(position:Position):MainRole
+		{
+			if (_instance)
+			{
+				return _instance;
+			}
+			_instance = new MainRole().init(position);
+			return _instance;
+		}
+		
 		private var run:MovieClip;
-		override protected function createUI():void {
+		
+		override protected function createUI():void
+		{
 			super.createUI();
 			_shadow.graphics.beginFill(0x0, 0.5);
-			_shadow.graphics.drawRect( -MapBlock.GRID_WIDTH / 2, - MapBlock.GRID_HEIGHT / 2,
-									MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
+			_shadow.graphics.drawRect(-MapBlock.GRID_WIDTH / 2, -MapBlock.GRID_HEIGHT / 2, MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
 			_shadow.graphics.endFill();
 			run = new RUN_CLASS();
 			run.stop();
 			_body.addChild(run);
 		}
 		
-	    override public function getExecuteOrderList():Array 
+		override public function getExecuteOrderList():Array
 		{
-			return super.getExecuteOrderList().concat([
-													OrderConst.CREATE_SKILL,
-													OrderConst.ROLE_START_MOVE,
-													OrderConst.ROLE_STOP_MOVE,
-													OrderConst.ROLE_JUMP
-												]);
+			return super.getExecuteOrderList().concat([OrderConst.CREATE_SKILL, OrderConst.ROLE_START_MOVE, OrderConst.ROLE_STOP_MOVE, OrderConst.ROLE_JUMP]);
 		}
 		
-		override public function executeOrder(orderName:String, orderParam:Object = null):void 
+		override public function executeOrder(orderName:String, orderParam:Object = null):void
 		{
-			switch(orderName) {
-				case OrderConst.CREATE_SKILL:
+			switch (orderName)
+			{
+				case OrderConst.CREATE_SKILL: 
 					var skillName:String = orderParam as String;
-					if (skillName != null) {
+					if (skillName != null)
+					{
 						var sPosition:Position = this.position.copy();
 						//var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 40, 10);
-						var skill:Skill = Skill.make(skillName, this, sPosition, 
-							this._physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 40, 10);
+						var skill:Skill = Skill.make(skillName, this, sPosition, this._physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10);
 						Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 					}
 					break;
-				case OrderConst.ROLE_START_MOVE:
+				case OrderConst.ROLE_START_MOVE: 
 					this._physicsComponent.startMove(int(orderParam));
 					break;
-				case OrderConst.ROLE_STOP_MOVE:
+				case OrderConst.ROLE_STOP_MOVE: 
 					this._physicsComponent.stopMove(int(orderParam));
 					break;
-				case OrderConst.ROLE_JUMP:
+				case OrderConst.ROLE_JUMP: 
 					this._physicsComponent.executeOrder(OrderConst.ROLE_JUMP, 60);
 					//if (this.position.elevation <= 0) {
-						//this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
+					//this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
 					//}
 					break;
-				default:
+				default: 
 					super.executeOrder(orderName, orderParam);
 			}
-			
+		
 		}
 		
 		private var tempTime:Number = 0;
 		private var fpsTime:Number = 1000 / 8;
-		override public function gotoNextFrame(passedTime:Number):void 
+		
+		override public function gotoNextFrame(passedTime:Number):void
 		{
 			super.gotoNextFrame(passedTime);
 			tempTime += passedTime;
-			if (tempTime >= fpsTime) {
-				tempTime-= fpsTime;
-				if (run != null) {
+			if (tempTime >= fpsTime)
+			{
+				tempTime -= fpsTime;
+				if (run != null)
+				{
 					run.gotoAndStop((run.currentFrame + 1) % run.totalFrames);
 				}
 			}
 		}
 		
-		override public function refreshElevation():void 
+		override public function refreshElevation():void
 		{
 			var elevation:Number = Math.max(this._position.elevation, 0);
 			this._body.y = -elevation;
 		}
 		
-		override public function release():void 
+		override public function release():void
 		{
 			super.release();
 			this._speed = 0;
 			this.run = null;
 		}
-		
+	
 	}
 
 }

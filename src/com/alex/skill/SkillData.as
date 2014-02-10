@@ -1,10 +1,11 @@
-package com.alex.skill 
+package com.alex.skill
 {
 	import com.alex.util.Cube;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.display.IPhysics;
 	import com.alex.worldmap.Position;
 	import flash.geom.Point;
+	
 	/**
 	 * ...
 	 * @author alex
@@ -26,12 +27,11 @@ package com.alex.skill
 		 */
 		public var type:int = 0;
 		
-		public function SkillData() 
+		public function SkillData()
 		{
-			
+		
 		}
-		
-		
+	
 	}
 
 }

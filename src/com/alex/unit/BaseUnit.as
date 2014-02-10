@@ -39,7 +39,7 @@ package com.alex.unit
 		
 		}
 		
-		public function refresh(vId:String, vPosition:Position, vPhysicsComponent:PhysicsComponent):BaseUnit
+		protected function refresh(vId:String, vPosition:Position, vPhysicsComponent:PhysicsComponent):BaseUnit
 		{
 			this._isRelease = false;
 			this._id = vId;
@@ -78,7 +78,7 @@ package com.alex.unit
 						this._body.scaleX = orderParam as int;
 					}
 					break;
-				case OrderConst.MAP_ITEM_MOVE:
+				case OrderConst.MAP_ITEM_MOVE: 
 					this.move(orderParam[0], orderParam[1]);
 					break;
 			}
@@ -169,6 +169,11 @@ package com.alex.unit
 			InstancePool.recycle(this);
 		}
 		
+		public function isRelease():Boolean
+		{
+			return this._isRelease;
+		}
+		
 		/* INTERFACE com.alex.animation.IAnimation */
 		
 		public function isPause():Boolean
@@ -198,15 +203,17 @@ package com.alex.unit
 			{
 				tempCollidedUnit = f_itemMove(vDirection, Math.min(tDistance, STEP));
 				tDistance -= STEP;
-				if (tempCollidedUnit) {
+				if (tempCollidedUnit)
+				{
 					collidedUnit = tempCollidedUnit;
 					break;
 				}
 			}
 			this.refreshDisplayXY();
-			if (vDirection == MoveDirection.Z_BOTTOM && collidedUnit) {
+			if (vDirection == MoveDirection.Z_BOTTOM && collidedUnit)
+			{
 				this._physicsComponent.executeOrder(OrderConst.STAND_ON_UNIT, collidedUnit);
-			} 
+			}
 		}
 		
 		///单位移动,direction:0左，1右，2上，3下
@@ -236,7 +243,7 @@ package com.alex.unit
 				}
 				for each (var tempUnit:IPhysics in unitDic)
 				{
-					if (this.canCollide(tempUnit))// && tempUnit.canCollide(this))
+					if (this.canCollide(tempUnit))
 					{
 						if (this._physicsComponent.toCube().intersects(tempUnit.physicsComponent.toCube()))
 						{
@@ -245,7 +252,7 @@ package com.alex.unit
 							{
 								return collidedUnit;
 							}
-							//isHitUnit = true;
+								//isHitUnit = true;
 						}
 					}
 				}

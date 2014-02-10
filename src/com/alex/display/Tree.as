@@ -1,8 +1,9 @@
-package com.alex.display 
+package com.alex.display
 {
 	import adobe.utils.CustomActions;
 	import com.alex.animation.AnimationManager;
 	import com.alex.animation.IAnimation;
+	import com.alex.component.AttributeComponent;
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.OrderConst;
 	import com.alex.constant.MoveDirection;
@@ -35,50 +36,51 @@ package com.alex.display
 		[Embed(source="/../bin/asset/role/head.jpg")]
 		public var RUN_CLASS:Class;
 		
-		public function Tree() 
+		public function Tree()
 		{
-			
+		
 		}
 		
-		public function init(vPostion:Position):Tree {
-			//this.refresh(IdMachine.getId(Tree), vPostion, InstancePool.getPhysicsComponent(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, PhysicsType.SOLID));
+		protected function init(vPostion:Position):Tree
+		{
 			this.refresh(IdMachine.getId(Tree), vPostion, PhysicsComponent.make(this, vPostion, 10, 40 * 2, 30 * 2, 100, 100, PhysicsType.SOLID));
+			refreshAttribute(AttributeComponent.make(this, 100, 100));
 			this.position.elevation = 200;
 			return this;
 		}
 		
-		public static function make(vPosition:Position):Tree {
+		public static function make(vPosition:Position):Tree
+		{
 			return Tree(InstancePool.getInstance(Tree)).init(vPosition);
 		}
 		
-		override protected function createUI():void 
+		override protected function createUI():void
 		{
 			super.createUI();
 			_shadow.graphics.beginFill(0x0, 0.3);
-			_shadow.graphics.drawEllipse(-MapBlock.GRID_WIDTH / 2, -MapBlock.GRID_HEIGHT / 2, 
-								MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
+			_shadow.graphics.drawEllipse(-MapBlock.GRID_WIDTH / 2, -MapBlock.GRID_HEIGHT / 2, MapBlock.GRID_WIDTH, MapBlock.GRID_HEIGHT);
 			_shadow.graphics.endFill();
 			
 			_body.graphics.clear();
 			_body.graphics.beginFill(0xff00ff, 0.5);
-			_body.graphics.drawRect( -20, -100, 40, 100);
+			_body.graphics.drawRect(-20, -100, 40, 100);
 			_body.graphics.beginFill(0x0, 0.5);
-			_body.graphics.drawRect( -20, -100, 40, 10);
+			_body.graphics.drawRect(-20, -100, 40, 10);
 			_body.graphics.endFill();
 			
 			var run:Bitmap = new RUN_CLASS();
 			run.scaleX = 0.5;
 			run.scaleY = 0.5;
-			run.x = -run.width>>1;
+			run.x = -run.width >> 1;
 			run.y = -run.height;
 			_body.addChild(run);
 		}
 		
-		override public function refreshElevation():void 
+		override public function refreshElevation():void
 		{
 			this._body.y = -this._position.elevation;
 		}
-		
+	
 	}
 
 }
