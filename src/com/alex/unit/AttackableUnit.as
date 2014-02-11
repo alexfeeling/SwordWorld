@@ -13,6 +13,7 @@ package com.alex.unit
 	import com.alex.worldmap.Position;
 	import com.alex.worldmap.WorldMap;
 	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
@@ -26,7 +27,7 @@ package com.alex.unit
 		/**
 		 * 攻击目标
 		 */
-		private var _attackTarget:AttackableUnit;
+		//private var _attackTarget:AttackableUnit;
 		private var _enemyTarget:AttackableUnit;
 		/**
 		 * 攻击区块
@@ -57,16 +58,18 @@ package com.alex.unit
 		
 		public function startAttack(vSkillName:String):void
 		{
-			if (this._isDying)
+			//trace(vSkillName);
+			if (this._isDying || _currentSkillData)
 			{
 				return;
 			}
-			_currentSkillData = _allSkillDic[vSkillName] as SkillData;
+			_currentSkillData = new SkillData(this);// _allSkillDic[vSkillName] as SkillData;
 			if (!_currentSkillData)
 			{
 				//无此技能
 				return;
 			}
+			_attackCube = _currentSkillData.getAttackCube();
 			for each (var target:AttackableUnit in searchTarget(_currentSkillData.maxImpactNum))
 			{
 				target.receiveAttackNotice(this);
@@ -94,13 +97,35 @@ package com.alex.unit
 		 * @param	vAttacker 攻击者
 		 * @param	vSkillData 技能数据
 		 */
-		public function receiveAttackHurt(vAttacker:AttackableUnit, vSkillData:SkillData):void
+		public function receiveAttackHurt(attacker:AttackableUnit, hurtObj:Object):void
 		{
 			if (this._isDying)
 			{
 				return;
 			}
-			this._attributeComponent.life -= 50;
+			if (hurtObj.lifeHurt)
+			{
+				this._attributeComponent.life -= hurtObj.lifeHurt;
+			}
+			if (hurtObj.xImpact)
+			{
+				this._physicsComponent.forceImpact(attacker.physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 
+					hurtObj.xImpact, true);
+			}
+			if (hurtObj.yImpact)
+			{
+				if (hurtObj.yImpact > 0)
+				{
+					this._physicsComponent.forceImpact(MoveDirection.Y_DOWN, hurtObj.yImpact, true);
+				} else {
+					this._physicsComponent.forceImpact(MoveDirection.Y_UP, hurtObj.yImpact, true);
+				}
+			}
+			if (hurtObj.zImpact)
+			{
+				this._physicsComponent.forceImpact(MoveDirection.Z_TOP, hurtObj.zImpact, true);
+			}
+			//this.toDisplayObject().alpha = 0.5;
 		}
 		
 		///查找攻击目标
@@ -129,7 +154,7 @@ package com.alex.unit
 				}
 				for each (var detectTarget:AttackableUnit in gridItemDic)
 				{
-					if (!detectTarget)
+					if (!detectTarget || detectTarget==this)
 					{
 						continue;
 					}
@@ -146,25 +171,32 @@ package com.alex.unit
 			return targetList;
 		}
 		
-		public function attackHurt():void
+		public function attackHurt(hurtObj:Object, attackCube:Cube = null):void
 		{
-			for each (var target:AttackableUnit in searchTarget(99))
+			if (attackCube)
 			{
-				target.receiveAttackHurt(this, _currentSkillData);
+				this._attackCube = attackCube;
 			}
-		
+			for each (var target:AttackableUnit in searchTarget(_currentSkillData.maxImpactNum))
+			{
+				target.receiveAttackHurt(this, hurtObj);
+			}
+			
 		}
 		
 		public function attackEnd():void
 		{
-			this._attackTarget = null;
+			//this._attackTarget = null;
+			this._attackCube = null;
+			this._currentSkillData = null;
 		}
 		
 		override public function release():void
 		{
 			super.release();
 			this._attackCube = null;
-			this._attackTarget = null;
+			this._currentSkillData = null;
+			//this._attackTarget = null;
 			this._rangeOfVision = null;
 			this._isDying = false;
 		}
@@ -194,6 +226,15 @@ package com.alex.unit
 					break;
 				default: 
 					super.executeOrder(orderName, orderParam);
+			}
+		}
+		
+		override public function gotoNextFrame(passedTime:Number):void 
+		{
+			super.gotoNextFrame(passedTime);
+			if (this._currentSkillData) 
+			{
+				this._currentSkillData.run(passedTime);
 			}
 		}
 	

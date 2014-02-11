@@ -18,6 +18,8 @@ package com.alex.constant
 		
 		public static const CREATE_SKILL:String = "cmd_create_skill";
 		
+		public static const ATTACK:String = "attack";
+		
 		public static const ROLE_USE_PROP:String = "cmd_role_use_prop";
 		
 		public static const MAP_ITEM_MOVE:String = "cmd_map_item_move";

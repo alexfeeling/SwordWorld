@@ -16,7 +16,7 @@ package com.alex.unit
 		 * @param	vAttacker 攻击者
 		 * @param	vSkillData 技能数据
 		 */
-		function receiveAttackHurt(vAttacker:AttackableUnit, vSkillData:SkillData):void;
+		function receiveAttackHurt(attacker:AttackableUnit, hurtObj:Object):void;
 		
 	}
 	

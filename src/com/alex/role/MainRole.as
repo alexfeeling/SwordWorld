@@ -88,7 +88,12 @@ package com.alex.role
 		
 		override public function getExecuteOrderList():Array
 		{
-			return super.getExecuteOrderList().concat([OrderConst.CREATE_SKILL, OrderConst.ROLE_START_MOVE, OrderConst.ROLE_STOP_MOVE, OrderConst.ROLE_JUMP]);
+			return super.getExecuteOrderList().concat([
+				OrderConst.CREATE_SKILL, 
+				OrderConst.ROLE_START_MOVE, 
+				OrderConst.ROLE_STOP_MOVE, 
+				OrderConst.ROLE_JUMP,
+				OrderConst.ATTACK]);
 		}
 		
 		override public function executeOrder(orderName:String, orderParam:Object = null):void
@@ -116,6 +121,9 @@ package com.alex.role
 					//if (this.position.elevation <= 0) {
 					//this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
 					//}
+					break;
+				case OrderConst.ATTACK:
+					this.startAttack(orderParam as String);
 					break;
 				default: 
 					super.executeOrder(orderName, orderParam);

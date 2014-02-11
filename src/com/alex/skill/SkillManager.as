@@ -33,7 +33,7 @@ package com.alex.skill
 		{
 			_skillKeyDic = new Dictionary();
 			var skillKey:Array = ["J", "JJ", "K", "KK", "JK"];
-			var skillName:Array = ["刺", "冲", "破", "升", "斩"];
+			var skillName:Array = ["刺", "冲", "南剑诀", "升", "斩"];
 			for (var i:int = 0; i < skillKey.length; i++)
 			{
 				_skillKeyDic[skillKey[i]] = skillName[i];
@@ -75,15 +75,22 @@ package com.alex.skill
 			return "skill_manager";
 		}
 		
-		public function executeOrder(commandName:String, commandParam:Object = null):void
+		public function executeOrder(orderName:String, orderParam:Object = null):void
 		{
-			switch (commandName)
+			switch (orderName)
 			{
 				case OrderConst.ROLE_USE_SKILL: 
-					if (commandParam is String)
+					if (orderParam is String)
 					{
-						//trace("use skill:", this._skillKeyDic[commandParam]);
-						this.sendCommand(OrderConst.CREATE_SKILL, this._skillKeyDic[commandParam as String]);
+						switch(this._skillKeyDic[orderParam])
+						{
+							case "刺":
+								Commander.sendOrder(OrderConst.ATTACK, this._skillKeyDic[orderParam]);
+								break;
+							case "南剑诀":
+								Commander.sendOrder(OrderConst.CREATE_SKILL, this._skillKeyDic[orderParam as String]);
+								break;
+						}
 					}
 					break;
 			}
@@ -91,10 +98,10 @@ package com.alex.skill
 		
 		/* INTERFACE com.alex.pattern.ICommandSender */
 		
-		public function sendCommand(commandName:String, commandParam:Object = null):void
-		{
-			Commander.sendOrder(commandName, commandParam);
-		}
+		//public function sendCommand(commandName:String, commandParam:Object = null):void
+		//{
+			//Commander.sendOrder(commandName, commandParam);
+		//}
 	
 	}
 

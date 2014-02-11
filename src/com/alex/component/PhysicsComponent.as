@@ -506,23 +506,25 @@ package com.alex.component
 			{
 				//if (this._displayObj is Tree)
 				//{
-					//this._xVelocity = (Math.random() - 0.5) * 50;
-					//this._isSelfControl = false;
+				//this._xVelocity = (Math.random() - 0.5) * 50;
+				//this._isSelfControl = false;
 				//}
 			}
-			if (this._isRelease) {
+			if (this._isRelease)
+			{
 				return;
 			}
-			if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube())) 
+			if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube()))
 			{
-				this.unitLiftMe.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
+				this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
 				this.unitLiftMe = null;
 			}
-			for (var unitId:String in this.unitStandOnMeDic) {
+			for (var unitId:String in this.unitStandOnMeDic)
+			{
 				var unit:IPhysics = this.unitStandOnMeDic[unitId] as IPhysics;
 				if (unit && !this.toCube().isLiftCube(unit.physicsComponent.toCube()))
 				{
-					unit.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
+					unit.physicsComponent.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
 					delete this.unitStandOnMeDic[unitId];
 				}
 			}
@@ -566,23 +568,25 @@ package com.alex.component
 			{
 				//if (this._displayObj is Tree)
 				//{
-					//this._isSelfControl = false;
-					//this._yVelocity = (Math.random() - 0.5) * 50;
+				//this._isSelfControl = false;
+				//this._yVelocity = (Math.random() - 0.5) * 50;
 				//}
 			}
-			if (this._isRelease) {
+			if (this._isRelease)
+			{
 				return;
 			}
-			if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube())) 
+			if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube()))
 			{
-				this.unitLiftMe.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
+				this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
 				this.unitLiftMe = null;
 			}
-			for (var unitId:String in this.unitStandOnMeDic) {
+			for (var unitId:String in this.unitStandOnMeDic)
+			{
 				var unit:IPhysics = this.unitStandOnMeDic[unitId] as IPhysics;
 				if (unit && !this.toCube().isLiftCube(unit.physicsComponent.toCube()))
 				{
-					unit.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
+					unit.physicsComponent.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
 					delete this.unitStandOnMeDic[unitId];
 				}
 			}
@@ -598,12 +602,12 @@ package com.alex.component
 			{
 				a = 0;
 			}
-			if (this._zVelocity != 0) 
+			if (this._zVelocity != 0)
 			{
 				//垂直碰撞，以后加入动量守恒，这里先直接设动能为0
 				//if (this.unitStandOnMeDic) 
 				//{
-					//this._zVelocity = 0;
+				//this._zVelocity = 0;
 				//} 
 			}
 			if (this._zVelocity > 0)
@@ -612,26 +616,28 @@ package com.alex.component
 				this._isDropping = false;
 				var distance:Number = this._zVelocity * tempTime - 0.5 * a * tempTime * tempTime;
 				this._zVelocity -= GRAVITY * passedTime / 100;
-				if (this._zVelocity <= 0) {
+				if (this._zVelocity <= 0)
+				{
 					this._isDropping = true;
 					this._isFlying = false;
 				}
 				this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Z_TOP, int(distance)]);
-				if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube())) 
+				if (this.unitLiftMe && !this.unitLiftMe.physicsComponent.toCube().isLiftCube(this.toCube()))
 				{
 					this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
 					this.unitLiftMe = null;
 				}
-				for (var unitId:String in this.unitStandOnMeDic) {
+				for (var unitId:String in this.unitStandOnMeDic)
+				{
 					var unit:IPhysics = this.unitStandOnMeDic[unitId] as IPhysics;
 					if (unit && !this.toCube().isLiftCube(unit.physicsComponent.toCube()))
 					{
-						unit.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
+						unit.physicsComponent.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT);
 						delete this.unitStandOnMeDic[unitId];
 					}
 				}
 			}
-			else if (!this.isStandOnSomething())//在空中
+			else if (!this.isStandOnSomething()) //在空中
 			{
 				if (_physicsType == PhysicsType.SOLID)
 				{
@@ -641,14 +647,15 @@ package com.alex.component
 					this._displayObj.executeOrder(OrderConst.MAP_ITEM_MOVE, [MoveDirection.Z_BOTTOM, int(distance)]);
 				}
 			}
-			if (this._isRelease) {
+			if (this._isRelease)
+			{
 				return;
 			}
-			if (this._isDropping && this.isStandOnSomething())//站立在一个实体之上
-			{ 
+			if (this._isDropping && this.isStandOnSomething()) //站立在一个实体之上
+			{
 				//着地一刻
 				this._zVelocity = 0;
-				if (!this.unitLiftMe) 
+				if (!this.unitLiftMe)
 				{
 					this._position.elevation = 0;
 				}
@@ -689,8 +696,8 @@ package com.alex.component
 				}
 				this._isDropping = false;
 				this._isFlying = false;
-					//if (this._displayObj is Tree) 
-					//this.forceImpact(ForceDirection.Z_TOP, 100);
+				//if (this._displayObj is Tree) 
+				//this.forceImpact(ForceDirection.Z_TOP, 100);
 			}
 		}
 		
@@ -698,9 +705,7 @@ package com.alex.component
 		
 		public function getExecuteOrderList():Array
 		{
-			return [OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id, 
-					OrderConst.STAND_ON_UNIT,
-					OrderConst.LIFT_UNIT];
+			return [OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id, OrderConst.STAND_ON_UNIT, OrderConst.LIFT_UNIT];
 		}
 		
 		public function executeOrder(orderName:String, orderParam:Object = null):void
@@ -715,29 +720,31 @@ package com.alex.component
 					break;
 				case OrderConst.STAND_ON_UNIT: 
 					this.unitLiftMe = orderParam as IPhysics;
-					if (this.unitLiftMe) 
+					if (this.unitLiftMe)
 					{
 						this.unitLiftMe.physicsComponent.executeOrder(OrderConst.LIFT_UNIT, this._displayObj);
 					}
 					break;
-				case OrderConst.LIFT_UNIT:
-					if (orderParam is IPhysics) 
+				case OrderConst.LIFT_UNIT: 
+					if (orderParam is IPhysics)
 					{
 						this.unitStandOnMeDic[(orderParam as IPhysics).id] = orderParam;
 					}
 					break;
-				case OrderConst.ROLE_JUMP:
-					if (this._position.elevation <= 0 || this.unitLiftMe) {
+				case OrderConst.ROLE_JUMP: 
+					if (this._position.elevation <= 0 || this.unitLiftMe)
+					{
 						this.forceImpact(MoveDirection.Z_TOP, int(orderParam));
 					}
 					break;
-				case OrderConst.CANCEL_LIFT_UNIT:
+				case OrderConst.CANCEL_LIFT_UNIT: 
 					var unitId:String = (orderParam as IPhysics).id;
-					if (this.unitStandOnMeDic[unitId]) {
+					if (this.unitStandOnMeDic[unitId])
+					{
 						delete this.unitStandOnMeDic[unitId];
 					}
 					break;
-				case OrderConst.CANCEL_STAND_ON_UNIT:
+				case OrderConst.CANCEL_STAND_ON_UNIT: 
 					this.unitLiftMe = null;
 					break;
 			}
@@ -754,12 +761,14 @@ package com.alex.component
 		{
 			Commander.cancelExecutor(this);
 			InstancePool.recycle(this);
-			if (this.unitLiftMe) {
+			if (this.unitLiftMe)
+			{
 				this.unitLiftMe.physicsComponent.executeOrder(OrderConst.CANCEL_LIFT_UNIT, this._displayObj);
 				this.unitLiftMe = null;
 			}
-			for each (var unit:IPhysics in this.unitStandOnMeDic) {
-				unit.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT, this._displayObj);
+			for each (var unit:IPhysics in this.unitStandOnMeDic)
+			{
+				unit.physicsComponent.executeOrder(OrderConst.CANCEL_STAND_ON_UNIT, this._displayObj);
 			}
 			this._isRelease = true;
 			this._displayObj = null;
@@ -769,28 +778,29 @@ package com.alex.component
 			this._yVelocity = 0;
 			this._zVelocity = 0;
 			this._id = null;
-			
+		
 		}
 		
 		public function toCube():Cube
 		{
-			return new Cube(_position.globalX, _position.globalY, _position.elevation, _length, _width, _height);
+			return new Cube(_position.globalX - (_length >> 1), _position.globalY - (_width >> 1), _position.elevation, _length, _width, _height);
 		}
 		
 		///是否站立在某些东西之上
-		public function isStandOnSomething():Boolean {
+		public function isStandOnSomething():Boolean
+		{
 			return this._position.elevation <= 0 || this.unitLiftMe;
 		}
 		
-		
-		public static function make(display:IDisplay, position:Position, speed:int, length:int, width:int, height:int, mass:int, physicsType:int):PhysicsComponent {
+		public static function make(display:IDisplay, position:Position, speed:int, length:int, width:int, height:int, mass:int, physicsType:int):PhysicsComponent
+		{
 			//InstancePool.getPhysicsComponent(display, position, speed, length, width, height, mass, physicsType);
 			return PhysicsComponent(InstancePool.getInstance(PhysicsComponent)).init(display, position, speed, length, width, height, mass, physicsType);
 		}
 		
 		/* INTERFACE com.alex.pool.IRecycle */
 		
-		public function isRelease():Boolean 
+		public function isRelease():Boolean
 		{
 			return this._isRelease;
 		}

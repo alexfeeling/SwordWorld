@@ -54,7 +54,7 @@ package com.alex.util
 				(this.x >= targetCube.x + targetCube.length) || 
 				(this.y + this.width <= targetCube.y) || 
 				(this.y >= targetCube.y + targetCube.width) || 
-				(this.z + this.height < targetCube.z))
+				(this.z + this.height != targetCube.z))
 			{
 				return false;
 			}

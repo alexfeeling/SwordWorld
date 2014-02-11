@@ -82,10 +82,10 @@ package com.alex.skill
 			{
 				return false;
 			}
-			unit.physicsComponent.forceImpact(MoveDirection.Z_TOP, this.getHitEnergy());
+			//unit.physicsComponent.forceImpact(MoveDirection.Z_TOP, this.getHitEnergy());
 			if (unit is IAttackable)
 			{
-				(unit as IAttackable).receiveAttackHurt(this.ownner, this._skillData);
+				(unit as IAttackable).receiveAttackHurt(this.ownner, {lifeHurt:60, zImpact:this.getHitEnergy()});
 			}
 			this.release();
 			return true;
