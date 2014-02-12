@@ -82,15 +82,16 @@ package com.alex.skill
 				case OrderConst.ROLE_USE_SKILL: 
 					if (orderParam is String)
 					{
-						switch(this._skillKeyDic[orderParam])
-						{
-							case "刺":
-								Commander.sendOrder(OrderConst.ATTACK, this._skillKeyDic[orderParam]);
-								break;
-							case "南剑诀":
-								Commander.sendOrder(OrderConst.CREATE_SKILL, this._skillKeyDic[orderParam as String]);
-								break;
-						}
+						Commander.sendOrder(OrderConst.ATTACK, this._skillKeyDic[orderParam]);
+						//switch(this._skillKeyDic[orderParam])
+						//{
+							//case "刺":
+								//Commander.sendOrder(OrderConst.ATTACK, this._skillKeyDic[orderParam]);
+								//break;
+							//case "南剑诀":
+								//Commander.sendOrder(OrderConst.CREATE_SKILL, this._skillKeyDic[orderParam as String]);
+								//break;
+						//}
 					}
 					break;
 			}

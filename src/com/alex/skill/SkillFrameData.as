@@ -7,7 +7,11 @@ package com.alex.skill
 	public class SkillFrameData 
 	{
 		
-		public var type:String;
+		public var frameType:String;
+		
+		public var skillType:String;
+		
+		public var distanceId:String;
 		
 		public var lifeHurt:int = 0;
 		

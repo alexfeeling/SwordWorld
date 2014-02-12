@@ -105,7 +105,6 @@ package com.alex.role
 					if (skillName != null)
 					{
 						var sPosition:Position = this.position.copy();
-						//var skill:Skill = InstancePool.getSkill(skillName, this, sPosition, this._physicsComponent.faceDirection == 1?MoveDirection.X_RIGHT:MoveDirection.X_LEFT, 40, 10);
 						var skill:Skill = Skill.make(skillName, this, sPosition, this._physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10);
 						Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 					}

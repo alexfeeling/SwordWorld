@@ -38,24 +38,27 @@ package com.alex.skill
 		
 		private var _name:String;
 		
+		private var _frameDataObj:Object;
+		
 		public function Skill()
 		{
 		
 		}
 		
-		protected function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0):Skill
+		protected function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0, frameDataObj:Object = null):Skill
 		{
 			refresh(IdMachine.getId(Skill), vPosition, PhysicsComponent.make(this, vPosition, vSpeed, 50, 50, 50, 10, PhysicsType.BUBBLE));
 			this._name = vName;
 			this._ownner = vOwnner;
 			this._physicsComponent.startMove(vDir);
 			this._lifeTime = 5000;
+			_frameDataObj = frameDataObj;
 			return this;
 		}
 		
-		public static function make(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:int, vWeight:int):Skill
+		public static function make(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:int, vWeight:int, frameDataObj:Object = null):Skill
 		{
-			return Skill(InstancePool.getInstance(Skill)).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight);
+			return Skill(InstancePool.getInstance(Skill)).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight, frameDataObj);
 		}
 		
 		override protected function createUI():void
@@ -85,7 +88,7 @@ package com.alex.skill
 			//unit.physicsComponent.forceImpact(MoveDirection.Z_TOP, this.getHitEnergy());
 			if (unit is IAttackable)
 			{
-				(unit as IAttackable).receiveAttackHurt(this.ownner, {lifeHurt:60, zImpact:this.getHitEnergy()});
+				(unit as IAttackable).receiveAttackHurt(this.ownner, _frameDataObj);
 			}
 			this.release();
 			return true;

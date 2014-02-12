@@ -1,5 +1,8 @@
 package com.alex.skill
 {
+	import com.alex.constant.MoveDirection;
+	import com.alex.constant.OrderConst;
+	import com.alex.pattern.Commander;
 	import com.alex.unit.AttackableUnit;
 	import com.alex.util.Cube;
 	import com.alex.component.PhysicsComponent;
@@ -25,7 +28,7 @@ package com.alex.skill
 		
 		private var _currentFrame:int = 0;
 		private var _maxFrame:int = 10;
-		private var _frameData:Array = [null, null, null, { type:"hurt", lifeHurt:50, xImpact: -30, zImpact:40 }, null, null, { type:"hurt", lifeHurt:50, xImpact:100, yImpact:50, zImpact: -40}, null, null, { type:"end" } ];
+		private var _frameData:Array;
 		private var _attackableUnit:AttackableUnit;
 		
 		/**
@@ -37,11 +40,17 @@ package com.alex.skill
 		private var _fTime:Number = 0;
 		private var _tempTime:Number = 0;
 		
-		public function SkillData(attackableUnit:AttackableUnit)
+		public function SkillData(attackableUnit:AttackableUnit, frameData:Array = null)
 		{
 			_fps = 16;
 			_fTime = 1000 / _fps;
 			_attackableUnit = attackableUnit;
+			if (frameData)
+			{
+				_frameData = frameData;
+			} else {
+				_frameData = [{type:"end"}];
+			}
 		}
 		
 		public function run(passedTime:Number):void {
@@ -56,6 +65,14 @@ package com.alex.skill
 					{
 						case "hurt":
 							_attackableUnit.attackHurt(frameObj, getAttackCube());
+							break;
+						case "distance":
+							if (frameObj.distanceId)
+							{
+								var sPosition:Position = this._attackableUnit.position.copy();
+								var skill:Skill = Skill.make(frameObj.distanceId, this._attackableUnit, sPosition, this._attackableUnit.physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10, frameObj);
+								Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
+							}
 							break;
 						case "end":
 							_attackableUnit.attackEnd();

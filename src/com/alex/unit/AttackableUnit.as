@@ -6,7 +6,9 @@ package com.alex.unit
 	import com.alex.component.PhysicsComponent;
 	import com.alex.constant.MoveDirection;
 	import com.alex.constant.OrderConst;
+	import com.alex.constant.PhysicsType;
 	import com.alex.display.IAttribute;
+	import com.alex.display.IPhysics;
 	import com.alex.skill.SkillData;
 	import com.alex.unit.BaseUnit;
 	import com.alex.util.Cube;
@@ -48,12 +50,15 @@ package com.alex.unit
 		
 		public function AttackableUnit()
 		{
-		
+			
 		}
 		
 		protected function refreshAttribute(attributeComponent:AttributeComponent):void
 		{
 			this._attributeComponent = attributeComponent;
+			_allSkillDic = new Dictionary();
+			_allSkillDic["刺"] = [null, null, null, { type:"hurt", lifeHurt:50, xImpact: -30, zImpact:40 }, null, null, { type:"hurt", lifeHurt:50, xImpact:100, yImpact:50, zImpact: -40 }, null, null, { type:"end" } ];
+			_allSkillDic["南剑诀"] = [null, null, null, { type:"distance", distanceId:"d1", lifeHurt:30, xImpact: 50, zImpact:20 }, null, null, { type:"distance", distanceId:"d1", lifeHurt:30, xImpact: -100, zImpact: -40 }, null, null, { type:"end" } ];
 		}
 		
 		public function startAttack(vSkillName:String):void
@@ -63,7 +68,7 @@ package com.alex.unit
 			{
 				return;
 			}
-			_currentSkillData = new SkillData(this);// _allSkillDic[vSkillName] as SkillData;
+			_currentSkillData = new SkillData(this, _allSkillDic[vSkillName]);
 			if (!_currentSkillData)
 			{
 				//无此技能
@@ -99,11 +104,7 @@ package com.alex.unit
 		 */
 		public function receiveAttackHurt(attacker:AttackableUnit, hurtObj:Object):void
 		{
-			if (this._isDying)
-			{
-				return;
-			}
-			if (hurtObj.lifeHurt)
+			if (!this._isDying && hurtObj.lifeHurt)
 			{
 				this._attributeComponent.life -= hurtObj.lifeHurt;
 			}
@@ -152,9 +153,9 @@ package com.alex.unit
 				{
 					continue;
 				}
-				for each (var detectTarget:AttackableUnit in gridItemDic)
+				for each (var detectTarget:IPhysics in gridItemDic)
 				{
-					if (!detectTarget || detectTarget==this)
+					if (!detectTarget || detectTarget==this || detectTarget.physicsComponent.physicsType != PhysicsType.SOLID)
 					{
 						continue;
 					}
@@ -199,6 +200,7 @@ package com.alex.unit
 			//this._attackTarget = null;
 			this._rangeOfVision = null;
 			this._isDying = false;
+			this._allSkillDic = null;
 		}
 		
 		/* INTERFACE com.alex.display.IAttribute */
