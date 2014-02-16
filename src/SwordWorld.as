@@ -7,6 +7,7 @@ package
 	import com.alex.pattern.Commander;
 	import com.alex.pool.InstancePool;
 	import com.alex.skill.SkillManager;
+	import com.alex.socket.GameSocket;
 	import com.alex.util.Stats;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
@@ -37,6 +38,8 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.RESIZE, WorldMap.getInstance().onStageChange);
 			
+			new GameSocket(stage);
+			//return;
 			InstancePool.startUp();
 			InstancePool.preset(MapBlock, 20);
 			InstancePool.preset(Position, 20);
