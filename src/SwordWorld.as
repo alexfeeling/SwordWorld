@@ -38,7 +38,7 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.RESIZE, WorldMap.getInstance().onStageChange);
 			
-			new GameSocket(stage);
+			//new GameSocket(stage);
 			//return;
 			InstancePool.startUp();
 			InstancePool.preset(MapBlock, 20);
