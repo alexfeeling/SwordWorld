@@ -470,6 +470,7 @@ package com.alex.component
 		
 		private function _moveOnX(passedTime:Number, tempTime:Number, isFocus:Boolean):void
 		{
+			if (isBeCatched) return;
 			if (!this._isSelfControl && (this._position.elevation == 0 || !this.unitLiftMe))
 			{
 				var a:Number = this._friction * GRAVITY;
@@ -532,6 +533,7 @@ package com.alex.component
 		
 		private function _moveOnY(passedTime:Number, tempTime:Number, isFocus:Boolean):void
 		{
+			if (isBeCatched) return;
 			if (!this._isSelfControl && (this._position.elevation == 0 || !this.unitLiftMe))
 			{
 				var a:Number = this._friction * GRAVITY;
@@ -592,8 +594,11 @@ package com.alex.component
 			}
 		}
 		
+		public var isBeCatched:Boolean = false;
+		
 		private function _moveOnZ(passedTime:Number, tempTime:Number, isFocus:Boolean):void
 		{
+			if (isBeCatched) return;
 			if (!this.isStandOnSomething())
 			{
 				var a:Number = GRAVITY;

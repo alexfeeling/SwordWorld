@@ -61,6 +61,10 @@ package com.alex.skill
 				var frameObj:Object = _frameData[_currentFrame];
 				if (frameObj)
 				{
+					//if (frameObj.isEndCatch == true) {
+						//_attackableUnit.releaseCatch();
+					//}
+					//trace(frameObj.type);
 					switch(frameObj.type)
 					{
 						case "hurt":
@@ -74,16 +78,20 @@ package com.alex.skill
 								Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 							}
 							break;
+						case "catch":
+							_attackableUnit.catchAndFollow(frameObj, getAttackCube());
+							break;
+						case "releaseCatch":
+							_attackableUnit.releaseCatch();
+							break;
 						case "end":
 							_attackableUnit.attackEnd();
 							return;
 					}
 				}
 				_currentFrame++;
-				if (_currentFrame >= _maxFrame)
-				{
-					_attackableUnit.attackEnd();
-				}
+				//if (_currentFrame >= _maxFrame)
+					//_attackableUnit.attackEnd();
 			}
 		}
 		

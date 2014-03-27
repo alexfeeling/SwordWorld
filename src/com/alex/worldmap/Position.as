@@ -168,6 +168,11 @@ package com.alex.worldmap
 			return this.gridY * MapBlock.GRID_HEIGHT + this.insideY;
 		}
 		
+		public function set globalX(value:int):void {
+			this.gridX = int(value / MapBlock.GRID_WIDTH);
+			this._insideX = int(value % MapBlock.GRID_WIDTH);
+		}
+		
 		public function get insideX():int 
 		{
 			return _insideX;

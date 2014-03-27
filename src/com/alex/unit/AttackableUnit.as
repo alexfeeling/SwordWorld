@@ -59,6 +59,22 @@ package com.alex.unit
 			_allSkillDic = new Dictionary();
 			_allSkillDic["刺"] = [null, null, null, { type:"hurt", lifeHurt:50, xImpact: -30, zImpact:40 }, null, null, { type:"hurt", lifeHurt:50, xImpact:100, yImpact:50, zImpact: -40 }, null, null, { type:"end" } ];
 			_allSkillDic["南剑诀"] = [null, null, null, { type:"distance", distanceId:"d1", lifeHurt:30, xImpact: 50, zImpact:20 }, null, null, { type:"distance", distanceId:"d1", lifeHurt:30, xImpact: -100, zImpact: -40 }, null, null, { type:"end" } ];
+			_allSkillDic["升"] = [null, null, 
+			//{type:"catch", elevation:20}, null,null,
+			{type:"catch", elevation:50, x:50 }, null,
+			//{type:"catch", elevation:60, x:40 }, //null,null,
+			//{type:"catch", elevation:70, x:30 }, //null,null,
+			{type:"catch", elevation:80, x:0 }, null,
+			//{type:"catch", elevation:70, x:-40 }, //null,null,
+			{type:"catch", elevation:50, x:-50 }, null,
+			//{type:"catch", elevation:30, x:-80 },  //null,null,
+			{type:"catch", elevation:0, x: -100 }, null,
+			//{type:"catch", elevation:30, x: -80 },  //null,null,
+			{type:"catch", elevation:50, x: -50 }, null,
+			//{type:"catch", elevation:70, x: -40 }, //null,null,
+			{type:"catch", elevation:80, x:0 }, null,
+			{ type:"hurt", lifeHurt:50, xImpact:100, zImpact: -40, isEndCatch:true },
+			null, { type:"end" } ];
 		}
 		
 		public function startAttack(vSkillName:String):void
@@ -174,15 +190,21 @@ package com.alex.unit
 		
 		public function attackHurt(hurtObj:Object, attackCube:Cube = null):void
 		{
-			if (attackCube)
-			{
-				this._attackCube = attackCube;
-			}
-			for each (var target:AttackableUnit in searchTarget(_currentSkillData.maxImpactNum))
-			{
-				target.receiveAttackHurt(this, hurtObj);
-			}
 			
+			if (hurtObj.isEndCatch && _catchingUnit) {
+				_catchingUnit.physicsComponent.isBeCatched = false;
+				_catchingUnit.receiveAttackHurt(this, hurtObj);
+				_catchingUnit = null;
+			} else {//当抓举别人时不可攻击其它非抓举人
+				if (attackCube)
+				{
+					this._attackCube = attackCube;
+				}
+				for each (var target:AttackableUnit in searchTarget(_currentSkillData.maxImpactNum))
+				{
+					target.receiveAttackHurt(this, hurtObj);
+				}
+			}
 		}
 		
 		public function attackEnd():void
@@ -190,6 +212,33 @@ package com.alex.unit
 			//this._attackTarget = null;
 			this._attackCube = null;
 			this._currentSkillData = null;
+			this._catchingUnit = null;
+		}
+		
+		private var _catchingUnit:AttackableUnit;
+		public function catchAndFollow(frameObj:Object, attackCube:Cube):void {
+			if (attackCube)
+			{
+				this._attackCube = attackCube;
+			}
+			if (_catchingUnit == null) {
+				_catchingUnit = searchTarget(1).pop();
+				if (_catchingUnit) _catchingUnit.physicsComponent.isBeCatched = true;
+			}
+			
+			if (_catchingUnit){
+				if (frameObj.elevation is Number) {
+					_catchingUnit.position.elevation = int(frameObj.elevation);
+				}
+				if (frameObj.x is Number) {
+					_catchingUnit.position.globalX = this._position.globalX + int(frameObj.x)*this._physicsComponent.faceDirection
+				}
+			}
+		}
+		
+		public function releaseCatch():void {
+			if (_catchingUnit) _catchingUnit.physicsComponent.isBeCatched = false;
+			_catchingUnit = null;
 		}
 		
 		override public function release():void
