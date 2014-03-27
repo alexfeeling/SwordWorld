@@ -7,7 +7,7 @@ package com.alex.worldmap
 	import com.alex.constant.PhysicsType;
 	import com.alex.display.IPhysics;
 	import com.alex.pool.IRecycle;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.pattern.Commander;
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.constant.OrderConst;
@@ -95,6 +95,10 @@ package com.alex.worldmap
 			STAGE_WIDTH = (event.target as Stage).stageWidth;
 			STAGE_HEIGHT = (event.target as Stage).stageHeight;
 			this.refreshMapPosition(this._mainRole);
+		}
+		
+		public function get mainRole():MainRole {
+			return this._mainRole;
 		}
 		
 		private function init():void

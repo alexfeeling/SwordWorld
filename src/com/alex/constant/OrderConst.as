@@ -10,7 +10,8 @@ package com.alex.constant
 		public static const ROLE_START_MOVE:String = "role_start_move";
 		public static const ROLE_STOP_MOVE:String = "role_stop_move";
 		
-		public static const ROLE_JUMP:String = "role_jump";
+		public static const ROLE_START_JUMP:String = "role_start_jump";
+		public static const ROLE_END_JUMP:String = "role_end_jump";
 		
 		public static const MAP_ITEM_FORCE_MOVE:String = "map_item_force_move";
 		

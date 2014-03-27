@@ -13,7 +13,7 @@ package com.alex.role
 	import com.alex.pattern.IOrderExecutor;
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.unit.AttackableUnit;
 	import com.alex.unit.BaseUnit;
 	import com.alex.util.IdMachine;
@@ -92,7 +92,8 @@ package com.alex.role
 				OrderConst.CREATE_SKILL, 
 				OrderConst.ROLE_START_MOVE, 
 				OrderConst.ROLE_STOP_MOVE, 
-				OrderConst.ROLE_JUMP,
+				OrderConst.ROLE_START_JUMP,
+				OrderConst.ROLE_END_JUMP,
 				OrderConst.ATTACK]);
 		}
 		
@@ -105,7 +106,7 @@ package com.alex.role
 					if (skillName != null)
 					{
 						var sPosition:Position = this.position.copy();
-						var skill:Skill = Skill.make(skillName, this, sPosition, this._physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10);
+						var skill:SkillShow = SkillShow.make(skillName, this, sPosition, this._physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10);
 						Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 					}
 					break;
@@ -115,11 +116,11 @@ package com.alex.role
 				case OrderConst.ROLE_STOP_MOVE: 
 					this._physicsComponent.stopMove(int(orderParam));
 					break;
-				case OrderConst.ROLE_JUMP: 
-					this._physicsComponent.executeOrder(OrderConst.ROLE_JUMP, 60);
-					//if (this.position.elevation <= 0) {
-					//this._physicsComponent.forceImpact(ForceDirection.Z_TOP, 70);
-					//}
+				case OrderConst.ROLE_START_JUMP: 
+					this._physicsComponent.startJump();
+					break;
+				case OrderConst.ROLE_END_JUMP:
+					this._physicsComponent.endJump();
 					break;
 				case OrderConst.ATTACK:
 					this.startAttack(orderParam as String);

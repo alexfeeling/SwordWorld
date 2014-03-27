@@ -5,8 +5,9 @@ package com.alex.controll
 	import com.alex.constant.MoveDirection;
 	import com.alex.pattern.Commander;
 	import com.alex.pattern.IOrderExecutor;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.skill.SkillManager;
+	import com.alex.worldmap.WorldMap;
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import flash.utils.Dictionary;
@@ -117,7 +118,7 @@ package com.alex.controll
 						Commander.sendOrder(OrderConst.ROLE_START_MOVE, MoveDirection.Y_DOWN);
 						break;
 					case KEY_I://跳跃，闪避
-						Commander.sendOrder(OrderConst.ROLE_JUMP);
+						Commander.sendOrder(OrderConst.ROLE_START_JUMP);
 						this._skillKey = event.keyCode;
 						this._keyStayTime = -1;
 						break;
@@ -159,6 +160,9 @@ package com.alex.controll
 					break;
 				case KEY_S:
 					Commander.sendOrder(OrderConst.ROLE_STOP_MOVE, MoveDirection.Y_DOWN);
+					break;
+				case KEY_I:
+					Commander.sendOrder(OrderConst.ROLE_END_JUMP);
 					break;
 			}
 			_keyDic[event.keyCode] = 0;

@@ -11,7 +11,7 @@ package com.alex.component
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.role.MainRole;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.util.Cube;
 	import com.alex.util.IdMachine;
 	import com.alex.worldmap.Position;
@@ -311,6 +311,16 @@ package com.alex.component
 			this._zVelocity = 0;
 		}
 		
+		private var _isJump:Boolean = false;
+		public var jumpEnery:int = 70;
+		public function startJump():void {
+			this._isJump = true;
+		}
+		
+		public function endJump():void {
+			this._isJump = false;
+		}
+		
 		public function forceImpact(vDir:int, vVelocity:Number, isLoseControll:Boolean = false):void
 		{
 			if (isNaN(vVelocity))
@@ -595,7 +605,12 @@ package com.alex.component
 		}
 		
 		public var isBeCatched:Boolean = false;
-		
+		/**
+		 * 垂直方向的移动处理
+		 * @param	passedTime
+		 * @param	tempTime
+		 * @param	isFocus
+		 */
 		private function _moveOnZ(passedTime:Number, tempTime:Number, isFocus:Boolean):void
 		{
 			if (isBeCatched) return;
@@ -656,53 +671,62 @@ package com.alex.component
 			{
 				return;
 			}
-			if (this._isDropping && this.isStandOnSomething()) //站立在一个实体之上
-			{
-				//着地一刻
-				this._zVelocity = 0;
-				if (!this.unitLiftMe)
+			if (this.isStandOnSomething()) {
+				if (this._isDropping) //站立在一个实体之上
 				{
-					this._position.elevation = 0;
+					//着地一刻
+					this._zVelocity = 0;
+					if (!this.unitLiftMe)
+					{
+						this._position.elevation = 0;
+					}
+					if (this._isSelfControl)
+					{
+						if ((_isMoveLeft || _isMoveRight) && (_isMoveUp || _isMoveDown))
+						{
+							if (_isMoveRight)
+								_xVelocity = this._xRunSpeed * 0.7;
+							else
+								_xVelocity = -this._xRunSpeed * 0.7;
+							if (_isMoveDown)
+								_yVelocity = this._yRunSpeed * 0.7;
+							else
+								_yVelocity = -this._yRunSpeed * 0.7;
+						}
+						else if (_isMoveLeft || _isMoveRight)
+						{
+							if (_isMoveRight)
+								_xVelocity = this._xRunSpeed;
+							else
+								_xVelocity = -this._xRunSpeed;
+							_yVelocity = 0;
+						}
+						else if (_isMoveUp || _isMoveDown)
+						{
+							if (_isMoveDown)
+								_yVelocity = this._yRunSpeed;
+							else
+								_yVelocity = -this._yRunSpeed;
+							_xVelocity = 0;
+						}
+						else
+						{
+							_xVelocity = 0;
+							_yVelocity = 0;
+						}
+					}
+					this._isDropping = false;
+					this._isFlying = false;
+					
+					//if (this._displayObj is Tree) 
+					//this.forceImpact(ForceDirection.Z_TOP, 100);
 				}
-				if (this._isSelfControl)
+				else //站立在实体上
 				{
-					if ((_isMoveLeft || _isMoveRight) && (_isMoveUp || _isMoveDown))
-					{
-						if (_isMoveRight)
-							_xVelocity = this._xRunSpeed * 0.7;
-						else
-							_xVelocity = -this._xRunSpeed * 0.7;
-						if (_isMoveDown)
-							_yVelocity = this._yRunSpeed * 0.7;
-						else
-							_yVelocity = -this._yRunSpeed * 0.7;
-					}
-					else if (_isMoveLeft || _isMoveRight)
-					{
-						if (_isMoveRight)
-							_xVelocity = this._xRunSpeed;
-						else
-							_xVelocity = -this._xRunSpeed;
-						_yVelocity = 0;
-					}
-					else if (_isMoveUp || _isMoveDown)
-					{
-						if (_isMoveDown)
-							_yVelocity = this._yRunSpeed;
-						else
-							_yVelocity = -this._yRunSpeed;
-						_xVelocity = 0;
-					}
-					else
-					{
-						_xVelocity = 0;
-						_yVelocity = 0;
+					if (this._isJump) {
+						this.forceImpact(MoveDirection.Z_TOP, jumpEnery);
 					}
 				}
-				this._isDropping = false;
-				this._isFlying = false;
-				//if (this._displayObj is Tree) 
-				//this.forceImpact(ForceDirection.Z_TOP, 100);
 			}
 		}
 		
@@ -710,7 +734,8 @@ package com.alex.component
 		
 		public function getExecuteOrderList():Array
 		{
-			return [OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id, OrderConst.STAND_ON_UNIT, OrderConst.LIFT_UNIT];
+			return [OrderConst.MAP_ITEM_FORCE_MOVE + this._displayObj.id, 
+			OrderConst.STAND_ON_UNIT, OrderConst.LIFT_UNIT];
 		}
 		
 		public function executeOrder(orderName:String, orderParam:Object = null):void
@@ -734,12 +759,6 @@ package com.alex.component
 					if (orderParam is IPhysics)
 					{
 						this.unitStandOnMeDic[(orderParam as IPhysics).id] = orderParam;
-					}
-					break;
-				case OrderConst.ROLE_JUMP: 
-					if (this._position.elevation <= 0 || this.unitLiftMe)
-					{
-						this.forceImpact(MoveDirection.Z_TOP, int(orderParam));
 					}
 					break;
 				case OrderConst.CANCEL_LIFT_UNIT: 

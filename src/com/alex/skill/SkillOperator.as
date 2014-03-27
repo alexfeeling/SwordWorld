@@ -11,10 +11,10 @@ package com.alex.skill
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * 技能运作类
 	 * @author alex
 	 */
-	public class SkillData
+	public class SkillOperator
 	{
 		
 		public var name:String;
@@ -40,7 +40,7 @@ package com.alex.skill
 		private var _fTime:Number = 0;
 		private var _tempTime:Number = 0;
 		
-		public function SkillData(attackableUnit:AttackableUnit, frameData:Array = null)
+		public function SkillOperator(attackableUnit:AttackableUnit, frameData:Array = null)
 		{
 			_fps = 16;
 			_fTime = 1000 / _fps;
@@ -61,32 +61,40 @@ package com.alex.skill
 				var frameObj:Object = _frameData[_currentFrame];
 				if (frameObj)
 				{
-					//if (frameObj.isEndCatch == true) {
-						//_attackableUnit.releaseCatch();
-					//}
-					//trace(frameObj.type);
 					switch(frameObj.type)
 					{
-						case "hurt":
+						case "hurt"://普通伤害
 							_attackableUnit.attackHurt(frameObj, getAttackCube());
 							break;
-						case "distance":
+						case "distance"://释放远程招式
 							if (frameObj.distanceId)
 							{
 								var sPosition:Position = this._attackableUnit.position.copy();
-								var skill:Skill = Skill.make(frameObj.distanceId, this._attackableUnit, sPosition, this._attackableUnit.physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10, frameObj);
+								var skill:SkillShow = SkillShow.make(frameObj.distanceId, this._attackableUnit, sPosition, this._attackableUnit.physicsComponent.faceDirection == 1 ? MoveDirection.X_RIGHT : MoveDirection.X_LEFT, 40, 10, frameObj);
 								Commander.sendOrder(OrderConst.ADD_ITEM_TO_WORLD_MAP, skill);
 							}
+							break;
+						case "lockTarget"://锁定目标
+							_attackableUnit.locakTarget(getAttackCube());
+							break;
+						case "hurt_target"://攻击锁定目标
+							_attackableUnit.hurtLockingTarget(frameObj);
 							break;
 						case "catch":
 							_attackableUnit.catchAndFollow(frameObj, getAttackCube());
 							break;
-						case "releaseCatch":
+						case "hurt_catch":
+							_attackableUnit.attackHurtCatch(frameObj);
+							break;
+						case "release_catch":
 							_attackableUnit.releaseCatch();
 							break;
 						case "end":
 							_attackableUnit.attackEnd();
 							return;
+					}
+					if (frameObj.releaseCatch) {
+						_attackableUnit.releaseCatch();
 					}
 				}
 				_currentFrame++;

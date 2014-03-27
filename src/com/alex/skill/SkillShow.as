@@ -24,30 +24,30 @@ package com.alex.skill
 	import flash.display.Sprite;
 	
 	/**
-	 * ...
+	 * 显式技能招式
 	 * @author alex
 	 */
-	public class Skill extends BaseUnit
+	public class SkillShow extends BaseUnit
 	{
 		
 		private var _ownner:AttackableUnit;
 		
 		private var _lifeTime:Number = 0;
 		
-		private var _skillData:SkillData;
+		private var _skillData:SkillOperator;
 		
 		private var _name:String;
 		
 		private var _frameDataObj:Object;
 		
-		public function Skill()
+		public function SkillShow()
 		{
 		
 		}
 		
-		protected function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0, frameDataObj:Object = null):Skill
+		protected function init(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:Number, vWeight:Number = 0, frameDataObj:Object = null):SkillShow
 		{
-			refresh(IdMachine.getId(Skill), vPosition, PhysicsComponent.make(this, vPosition, vSpeed, 50, 50, 50, 10, PhysicsType.BUBBLE));
+			refresh(IdMachine.getId(SkillShow), vPosition, PhysicsComponent.make(this, vPosition, vSpeed, 50, 50, 50, 10, PhysicsType.BUBBLE));
 			this._name = vName;
 			this._ownner = vOwnner;
 			this._physicsComponent.startMove(vDir);
@@ -56,9 +56,9 @@ package com.alex.skill
 			return this;
 		}
 		
-		public static function make(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:int, vWeight:int, frameDataObj:Object = null):Skill
+		public static function make(vName:String, vOwnner:AttackableUnit, vPosition:Position, vDir:int, vSpeed:int, vWeight:int, frameDataObj:Object = null):SkillShow
 		{
-			return Skill(InstancePool.getInstance(Skill)).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight, frameDataObj);
+			return SkillShow(InstancePool.getInstance(SkillShow)).init(vName, vOwnner, vPosition, vDir, vSpeed, vWeight, frameDataObj);
 		}
 		
 		override protected function createUI():void

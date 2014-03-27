@@ -8,7 +8,6 @@ package
 	import com.alex.pool.InstancePool;
 	import com.alex.skill.SkillManager;
 	import com.alex.socket.GameSocket;
-	import com.alex.util.Stats;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;
 	import com.alex.worldmap.WorldMap;
@@ -26,17 +25,12 @@ package
 		
 		public function SwordWorld() 
 		{
-			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
+			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.align = StageAlign.TOP_LEFT;
-			stage.addEventListener(Event.RESIZE, WorldMap.getInstance().onStageChange);
 			
 			//new GameSocket(stage);
 			//return;
@@ -55,8 +49,6 @@ package
 			var worldMap:WorldMap = WorldMap.getInstance();
 			this.addChild(worldMap);
 			
-			///显示fps工具类
-			this.addChild(new Stats());
 		}
 		
 	}

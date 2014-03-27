@@ -6,7 +6,7 @@ package com.alex.pool
 	import com.alex.display.Tree;
 	import com.alex.model.EnergyVector;
 	import com.alex.role.MainRole;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.unit.AttackableUnit;
 	import com.alex.worldmap.MapBlock;
 	import com.alex.worldmap.Position;

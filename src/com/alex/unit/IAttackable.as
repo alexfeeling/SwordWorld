@@ -1,6 +1,5 @@
 package com.alex.unit 
 {
-	import com.alex.skill.SkillData;
 	
 	/**
 	 * ...

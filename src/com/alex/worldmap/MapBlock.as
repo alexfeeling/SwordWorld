@@ -10,7 +10,7 @@ package com.alex.worldmap
 	import com.alex.pool.InstancePool;
 	import com.alex.pool.IRecycle;
 	import com.alex.role.MainRole;
-	import com.alex.skill.Skill;
+	import com.alex.skill.SkillShow;
 	import com.alex.util.IdMachine;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
